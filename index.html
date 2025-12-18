@@ -3,19 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Style -->
     <link rel="stylesheet" href="./dist/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    <title>Message Site</title>
+    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+    <!-- Google Fonts -->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <!-- Misc -->
+    <link rel="shortcut icon" href="./img/fav.svg" type="image/x-icon">
+    <title>Online Store</title>
 </head>
 <body>
     <div class="sidebar">
-        <div class="header">
-            <h1>Taskplus</h1>
-            <hr>
-        </div>
+        <!-- Sidebar header -->
+        <header>
+            <img src="./img/fav.svg" alt="...">
+            <div class="title">
+                <h1>Right Direction</h1>
+                <p>Est. 2025</p>
+            </div>
+        </header>
+        <hr>
+        <!-- Sidebar navivation -->
+        <nav>
+            <div class="nav-item">
+                <button class="fa home">Home</button>
+            </div>
+            <div class="nav-item">
+                <button class="fa products selected">Products</button>
+            </div>
+            <div class="nav-item">
+                <button class="fa orders">Orders</button>
+                <div class="notifies">3</div>
+            </div>
+            <div class="nav-item">
+                <button class="fa notifications">Notifications</button>
+                <div class="notifies">99</div>
+            </div>
+            <div class="nav-item">
+                <button class="fa account">My Account</button>
+            </div>
+        </nav>
+        <p class="shipping">Free shipping for orders over &euro;45</p>
     </div>
-    <div class="border-light container">
-        
-    </div>
+    <main>
+        <!-- Products page -->
+        <article id="products">
+            <div class="top">
+                <h1>Products</h1>
+                <i class="fa-solid fa-magnifying-glass search"></i>
+            </div>
+            <div class="filters">
+                <p>Sort by</p>
+                <ul class="sorts">
+                    <li><button class="selected">All</button></li>
+                    <li><button>Most Sold</button></li>
+                    <li><button>Price (Ascending)</button></li>
+                    <li><button>Price (Descending)</button></li>
+                </ul>
+            </div>
+            <div class="list">
+                <div>
+                    <button class="action"></button>
+                    <div class="top">
+                        <h1>Product Name</h1>
+                        <div class="status stocked">In Stock</div>
+                    </div>
+                    <img src="https://pngimg.com/d/vans_PNG16.png" alt="...">
+                    <div class="price">&euro;149.85</div>
+                </div>
+                <div>
+                    <button class="action"></button>
+                    <div class="top">
+                        <h1>Product Name</h1>
+                        <div class="status left">6 left in stock</div>
+                    </div>
+                    <img src="https://pngimg.com/d/vans_PNG16.png" alt="...">
+                    <div class="price">&euro;149.85</div>
+                </div>
+                <div>
+                    <button class="action"></button>
+                    <div class="top">
+                        <h1>Product Name</h1>
+                        <div class="status none">Sold Out</div>
+                    </div>
+                    <img src="https://pngimg.com/d/vans_PNG16.png" alt="...">
+                    <div class="price">&euro;149.85</div>
+                </div>
+                <div></div>
+            </div>
+        </article>
+    </main>
 </body>
 </html>

@@ -2,34 +2,254 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+*.fa {
+  font-family: "Inter", sans-serif !important;
+}
+*.fa::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+* button {
+  cursor: pointer;
 }
 
 body {
-  background-color: rgb(15, 15, 15);
+  background-color: black;
+  display: flex;
+  flex-direction: row;
 }
-body .container {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 80%;
-  height: 100vh;
-  background-color: rgb(20, 20, 20);
-  border-left: 1px solid #272727;
+body hr {
+  color: rgb(40, 40, 40);
 }
 body .sidebar {
   height: 100vh;
-  width: 20%;
+  width: 350px;
+  min-width: 350px;
+  background-color: #0f0f0f;
+  display: flex;
+  flex-direction: column;
 }
-body .sidebar h1 {
-  padding: 15px 5%;
-  color: whitesmoke;
+body .sidebar .shipping {
+  color: rgba(214, 214, 214, 0.3);
+  user-select: none;
+  text-align: center;
+  margin: 15px 0;
+}
+body .sidebar header {
+  display: flex;
+  flex-direction: row;
+  padding: 30px 20px;
+}
+body .sidebar header img {
+  height: 50px;
+  width: 50px;
+  filter: invert(0.8392156863);
+  margin-right: 10px;
+}
+body .sidebar .title {
+  display: flex;
+  flex-direction: column;
+}
+body .sidebar .title h1 {
+  color: #d6d6d6;
   font-size: 1.5rem;
 }
-body .sidebar hr {
-  width: 90%;
-  margin: auto;
-  color: #272727;
+body .sidebar .title p {
+  color: gray;
+}
+body .sidebar nav {
+  padding: 30px 0;
+  flex-grow: 1;
+}
+body .sidebar nav .nav-item {
+  width: 100%;
+  position: relative;
+}
+body .sidebar nav .nav-item .notifies {
+  position: absolute;
+  background-color: #426bff;
+  height: 30px;
+  width: 30px;
+  border-radius: 6px;
+  color: #d6d6d6;
+  text-align: center;
+  line-height: 30px;
+  font-weight: 600;
+  right: 30px;
+  top: calc(50% - 15px);
+  user-select: none;
+}
+body .sidebar nav .nav-item .notifies + button:hover {
+  background-color: #848283;
+}
+body .sidebar nav .nav-item button {
+  display: block;
+  position: relative;
+  height: 50px;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  color: #848283;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: start;
+  padding: 0 60px;
+}
+body .sidebar nav .nav-item button.home::before {
+  content: "\f015";
+}
+body .sidebar nav .nav-item button.products::before {
+  content: "\f54f";
+}
+body .sidebar nav .nav-item button.orders::before {
+  content: "\f472";
+}
+body .sidebar nav .nav-item button.account::before {
+  content: "\f007";
+}
+body .sidebar nav .nav-item button.notifications::before {
+  content: "\f0f3";
+}
+body .sidebar nav .nav-item button::before {
+  font-size: 1.1rem;
+  position: absolute;
+  left: 30px;
+}
+body .sidebar nav .nav-item button:hover, body .sidebar nav .nav-item button.selected {
+  background-color: #426bff;
+  color: #d6d6d6;
+}
+body main {
+  flex-grow: 1;
+  height: 100vh;
+}
+body main #products {
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+body main #products .top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+body main #products .top h1 {
+  color: #d6d6d6;
+  flex-grow: 1;
+}
+body main #products .top .search {
+  color: #d6d6d6;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+body main #products .filters p {
+  color: rgba(214, 214, 214, 0.5);
+  font-weight: 500;
+}
+body main #products .filters .sorts {
+  margin-top: 10px;
+}
+body main #products .filters .sorts li {
+  display: inline-block;
+}
+body main #products .filters .sorts li button {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 6px;
+  color: #d6d6d6;
+}
+body main #products .filters .sorts li button:hover {
+  background-color: rgba(66, 107, 255, 0.5);
+}
+body main #products .filters .sorts li button.selected {
+  background-color: #426bff;
+}
+body main #products .list {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 15px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  padding: 3px;
+  padding-bottom: 15px;
+}
+body main #products .list > div {
+  flex: 1 1 350px;
+  aspect-ratio: 1;
+  background-color: #0f0f0f;
+  border-radius: 6px;
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+}
+body main #products .list > div:hover {
+  outline: solid #426bff;
+  outline-width: 3px;
+  transition: outline-width 0.1s;
+}
+body main #products .list > div .action {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  z-index: 1;
+}
+body main #products .list > div .price {
+  position: absolute;
+  color: #d6d6d6;
+  font-size: 1.5rem;
+  padding: 5px 10px;
+  border-radius: 12px;
+  bottom: 15px;
+  left: 15px;
+  user-select: none;
+}
+body main #products .list > div .price::after {
+  content: "+ VAT";
+  margin-left: 5px;
+  font-size: 1rem;
+  color: rgba(214, 214, 214, 0.3);
+}
+body main #products .list > div img {
+  aspect-ratio: 1;
+  width: 85%;
+  align-self: center;
+}
+body main #products .list > div .top {
+  padding: 0 25px;
+  padding-top: 10px;
+  position: relative;
+}
+body main #products .list > div .top h1 {
+  color: #d6d6d6;
+  font-size: 1.5rem;
+}
+body main #products .list > div .top .status {
+  border-radius: 12px;
+  user-select: none;
+  padding: 5px 10px;
+}
+body main #products .list > div .top .status.stocked {
+  background-color: rgba(0, 255, 0, 0.1);
+  color: rgba(0, 255, 0, 0.6);
+}
+body main #products .list > div .top .status.left {
+  background-color: rgba(255, 255, 0, 0.1);
+  color: rgba(255, 255, 0, 0.6);
+}
+body main #products .list > div .top .status.none {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: rgba(255, 0, 0, 0.6);
 }
 
 /*# sourceMappingURL=style.css.map */
