@@ -11,9 +11,36 @@
     --color-secondary: rgba(84, 85, 85, .8);
     --color-accent: #e50914;
     --color-surface: #303131;
+
+    --color-success: #4efc41;
+    --color-error: #fc4141;
+    --color-warning: #fcdd41;
+    --color-info: #419ffc;
 }
 
 /* Tailwind utils */
+
+@layer utilities {
+    .movie::before {
+        content: "\e131";
+        @apply font-fa font-black mr-2;
+    }
+
+    .home::before {
+        content: "\f015";
+        @apply font-fa font-black mr-2;
+    }
+
+    .tv::before {
+        content: "\f630";
+        @apply font-fa font-black mr-2;
+    }
+
+    .wlist::before {
+        content: "\f03a";
+        @apply font-fa font-black mr-2;
+    }
+}
 
 @layer components {
     body {
@@ -45,6 +72,13 @@
         }
     }
 
+    .wl-button {
+        @apply bg-secondary font-fa text-lg font-black text-primary rounded-lg inline-block h-12 aspect-square cursor-pointer ml-5 transition-transform;
+        &:hover {
+            @apply bg-primary/20 transform scale-110;
+        }
+    }
+
     .info-button {
         @apply bg-surface/50 font-display text-lg font-bold text-primary rounded-lg inline-block h-12 w-40 cursor-pointer ml-5 transition-transform;
         &:hover {
@@ -61,12 +95,60 @@
         content: "\f005";
         @apply font-fa font-bold mr-2;
     }
+
+    hr {
+        @apply text-surface my-8;
+    }
+
+    .section-title {
+        @apply relative;
+        &::before {
+            content: "";
+            @apply inline-block absolute bg-accent h-10 w-2 rounded-lg -left-5;
+        }
+    }
+
+    .notifications {
+        & > * {
+            @apply transition-transform;
+        }
+    }
+
+    .hide-notif {
+        @apply transform translate-x-100 opacity-0 transition-transform;
+    }
+
+    .content-modal {
+        @apply invisible opacity-0 pointer-events-none;
+        & > .modal {
+            @apply translate-y-10 opacity-0 transition-all;
+        }
+
+        &.active-modal {
+            @apply bg-black/70 opacity-100 visible pointer-events-auto backdrop-blur-sm transition-all;
+            & > .modal {
+                @apply translate-y-0 opacity-100 transition-transform;
+            }
+        }
+    }
 }
 
 /* Native CSS */
 
 * {
     scrollbar-width: none;
+}
+
+.grad {
+    background: #303131;
+    background: linear-gradient(0deg, rgba(48, 49, 49, 1) 0%, rgba(48, 49, 49, 0) 100%);
+    opacity: .8;
+}
+
+.grad-dark {
+    background: rgb(21, 22, 22);
+    background: linear-gradient(0deg, rgb(34, 34, 34) 0%, rgba(48, 49, 49, 0) 100%);
+    opacity: .8;
 }
 
 .backdrop {
