@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* Tailwind themes */
+
+@theme {
+    --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --font-fa: "Font Awesome 5 Free";
+
+    --color-bgtxt: #151616;
+    --color-primary: white;
+    --color-secondary: rgba(84, 85, 85, .8);
+    --color-accent: #e50914;
+    --color-surface: #303131;
+}
+
+/* Tailwind utils */
+
+@layer components {
+    body {
+        @apply bg-bgtxt;
+    }
+
+    .header {
+        &.scrolled {
+            @apply bg-bgtxt/80 backdrop-blur-xl transition-all;
+        }
+    }
+
+    .nav-item {
+        @apply cursor-pointer mx-3 h-full w-30 font-medium font-display text-white text-lg;
+        &:hover, &.selected {
+            @apply text-accent border-b;
+        }
+    }
+
+    .play-button {
+        @apply bg-primary font-display text-lg font-bold text-bgtxt rounded-lg inline-block h-12 w-32 cursor-pointer transition-transform;
+        &:hover {
+            @apply bg-primary/70 transform scale-110;
+        }
+
+        &::before {
+            content: "\f04b";
+            @apply font-fa font-black text-bgtxt mr-2;
+        }
+    }
+
+    .info-button {
+        @apply bg-surface/50 font-display text-lg font-bold text-primary rounded-lg inline-block h-12 w-40 cursor-pointer ml-5 transition-transform;
+        &:hover {
+            @apply bg-primary/20 transform scale-110;
+        }
+
+        &::before {
+            content: "\f05a";
+            @apply font-fa font-black text-primary mr-2;
+        }
+    }
+
+    .stars::before {
+        content: "\f005";
+        @apply font-fa font-bold mr-2;
+    }
+}
+
+/* Native CSS */
+
+* {
+    scrollbar-width: none;
+}
+
+.backdrop {
+    background-image: url("https://image.tmdb.org/t/p/original/8zbAoryWbtH0DKdev8abFAjdufy.jpg");
+}
