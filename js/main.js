@@ -1,12 +1,10 @@
 import { NotifyInfo } from "./modules/notifications.js"
-import { get_config } from "./modules/utils.js"
+import { fetch_content } from "./modules/utils.js"
 import { Section } from "./modules/category_section.js"
 
 // Elements
 
 // Functions
-
-get_config().then(response => NotifyInfo(response))
 
 // Init
 
@@ -21,6 +19,8 @@ top.render(document.querySelector(".category-sections"))
 
 const upcoming = new Section("Up And Coming", [])
 upcoming.render(document.querySelector(".category-sections"))
+
+fetch_content("playing", true).then(response => theatres.populate(response.results, true, "movie"))
 
 // Window DOM events
 

@@ -170,6 +170,10 @@
     opacity: .8;
 }
 
+.blurrer {
+    mask: linear-gradient(black, black, transparent);
+}
+
 .backdrop {
     background-image: url("https://image.tmdb.org/t/p/original/8zbAoryWbtH0DKdev8abFAjdufy.jpg");
 }

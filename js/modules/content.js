@@ -9,14 +9,17 @@ export class Poster {
 
     render(appendTo) {
         const template = document.getElementById("poster-content")
-        const cloned = template.contentEditable.cloneNode(true)
+        const cloned = template.cloneNode(true)
+
+        cloned.removeAttribute("id")
+        cloned.style.display = ''
 
         cloned.querySelector(".title").textContent = this.title
         cloned.querySelector(".rating").textContent = this.rating
         cloned.querySelector(".year").textContent = this.year
         cloned.querySelector(".img").setAttribute("src", this.img)
 
-        appendTo.appendCHild(cloned)
+        appendTo.appendChild(cloned)
     }
 }
 
@@ -30,14 +33,18 @@ export class Banner {
     }
 
     render(appendTo) {
+        console.log("BANNER")
         const template = document.getElementById("banner-content")
-        const cloned = template.contentEditable.cloneNode(true)
+        const cloned = template.cloneNode(true)
+
+        cloned.removeAttribute("id")
+        cloned.style.display = ''
 
         cloned.querySelector(".title").textContent = this.title
         cloned.querySelector(".rating").textContent = this.rating
         cloned.querySelector(".year").textContent = this.year
         cloned.querySelector(".img").setAttribute("src", this.img)
 
-        appendTo.appendCHild(cloned)
+        appendTo.appendChild(cloned)
     }
 }
