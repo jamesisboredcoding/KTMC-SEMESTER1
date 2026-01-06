@@ -1,33 +1,66 @@
 import { Poster, Banner } from "./content.js"
 import { IMAGE_URL } from "./utils.js"
 
+const SCROLL_SPEED = 400
+
 export class Section {
-    constructor(title, data, useBanners) {
+    constructor(title, useBanners = false) {
         this.title = title
-        this.data = data
         this.banners = useBanners
+        this.elements = []
     }
 
     render(appendTo) {
         const template = document.querySelector("#category-section")
         const cloned = template.content.cloneNode(true)
 
-        this.container = cloned.querySelector("div")
-        
         cloned.querySelector(".section-title").textContent = this.title
+
+        const list = cloned.querySelector(".list")
+        const moveRight = cloned.querySelector(".move-right")
+        const moveLeft = cloned.querySelector(".move-left")
+
+        this.container = list
+        this.dom = cloned
+
+        moveLeft.classList.toggle("hidden", (list.scrollLeft == 0))
+        moveRight.classList.toggle("hidden", !(list.scrollLeft + list.clientWidth >= list.scrollWidth - 1))
+
+        list.addEventListener("scroll", () => {
+            moveLeft.classList.toggle("hidden", (list.scrollLeft == 0))
+             moveRight.classList.toggle("hidden", (list.scrollLeft + list.clientWidth >= list.scrollWidth - 1))
+        })
+
+        moveRight.addEventListener("click", () => {
+            list.scrollBy({ left: SCROLL_SPEED, behavior: "smooth" })
+        })
+        moveLeft.addEventListener("click", () => {
+            list.scrollBy({ left: -SCROLL_SPEED, behavior: "smooth" })
+        })
+
         appendTo.appendChild(cloned)
     }
 
-    populate(content, banner, type) {
+    populate(content, type) {
         for (const item of content) {
+            console.log(item)
             const data = [
-                item.title, item.release_date, type, item.vote_average,
-                IMAGE_URL + (banner ? "w1280" : "w500") + (banner ? item.backdrop_path : item.poster_path)
+                item.title || item.name, item.release_date || item.first_air_date || "NaN", type, item.vote_average,
+                {
+                    "banner": `${IMAGE_URL}w1280${item.backdrop_path}`,
+                    "poster": `${IMAGE_URL}w500${item.poster_path}`
+                },
+                item.overview
             ]
 
-            const element = (banner ? new Banner(...data) : new Poster(...data))
+            const element = (this.banners ? new Banner(...data) : new Poster(...data))
             element.render(this.container)
-            console.log(element)
+            this.elements.push(element)
         }
+    }
+
+    remove() {
+        this.dom.remove()
+        delete this
     }
 }

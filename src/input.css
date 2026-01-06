@@ -172,6 +172,7 @@
 
 .blurrer {
     mask: linear-gradient(black, black, transparent);
+    transform: rotate(180deg);
 }
 
 .backdrop {
