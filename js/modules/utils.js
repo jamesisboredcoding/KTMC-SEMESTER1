@@ -96,6 +96,31 @@ export async function fetch_content(type, movie) {
                 .slice(0, 11)
             return { ...data, results: top }
         },
+        "hero": async () => {
+            const movieEndpoint = `/movie/now_playing`
+            const tvEndpoint = `/tv/popular`
+            
+            const [movieResponse, tvResponse] = await Promise.all([
+                fetch(TMBD_API + movieEndpoint, options),
+                fetch(TMBD_API + tvEndpoint, options)
+            ])
+
+            if (!movieResponse.ok || !tvResponse.ok) {
+                console.error("Error fetching data")
+                return
+            }
+
+            const movieData = await movieResponse.json()
+            const tvData = await tvResponse.json()
+            
+            const filteredMovies = movieData.results.filter((info) => info.original_language === "en")
+            const filteredTV = tvData.results.filter((info) => info.original_language === "en")
+            
+            const merged = [...filteredMovies, ...filteredTV]
+            const top = merged.sort((a, b) => b.popularity - a.popularity).slice(0, 11)
+            
+            return { results: top }
+        }
     }
 
     const validatedType = validTypes[type]

@@ -43,7 +43,6 @@ export class Section {
 
     populate(content, type) {
         for (const item of content) {
-            console.log(item)
             const data = [
                 item.title || item.name, item.release_date || item.first_air_date || "NaN", type, item.vote_average,
                 {
