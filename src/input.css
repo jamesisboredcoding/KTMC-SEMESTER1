@@ -40,6 +40,11 @@
         content: "\f03a";
         @apply font-fa font-black mr-2;
     }
+
+    .search::before {
+        content: "\f002";
+        @apply font-fa font-black mr-2;
+    }
 }
 
 @layer components {
@@ -126,6 +131,20 @@
 
         &.active-modal {
             @apply bg-black/70 opacity-100 visible pointer-events-auto backdrop-blur-sm transition-all;
+            & > .modal {
+                @apply translate-y-0 opacity-100 transition-transform;
+            }
+        }
+    }
+
+    .search-container {
+        @apply invisible opacity-0 pointer-events-none;
+        & > .modal {
+            @apply translate-y-10 opacity-0 transition-all;
+        }
+
+        &.active-modal {
+            @apply opacity-100 visible pointer-events-auto transition-all;
             & > .modal {
                 @apply translate-y-0 opacity-100 transition-transform;
             }

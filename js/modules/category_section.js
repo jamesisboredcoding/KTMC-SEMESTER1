@@ -5,12 +5,12 @@ export class Section {
         this.banners = useBanners
     }
 
-    render(domElement) {
+    render(appendTo) {
         const template = document.querySelector("#category-section")
         const cloned = template.content.cloneNode(true)
 
         cloned.querySelector(".section-title").textContent = this.title
 
-        domElement.appendChild(cloned)
+        appendTo.appendChild(cloned)
     }
 }

@@ -10,8 +10,17 @@ get_config().then(response => NotifyInfo(response))
 
 // Init
 
-const popular = new Section("In Theatres", [])
+const theatres = new Section("In Theatres", [])
+theatres.render(document.querySelector(".category-sections"))
+
+const popular = new Section("Popular", [])
 popular.render(document.querySelector(".category-sections"))
+
+const top = new Section("Top Rated", [])
+top.render(document.querySelector(".category-sections"))
+
+const upcoming = new Section("Up And Coming", [])
+upcoming.render(document.querySelector(".category-sections"))
 
 // Window DOM events
 

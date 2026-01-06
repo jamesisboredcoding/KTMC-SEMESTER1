@@ -1,3 +1,5 @@
+const content_modal = document.querySelector(".content-modal")
+
 export async function get_config() {
     try {
        const response = await fetch("../config.json")
@@ -6,4 +8,12 @@ export async function get_config() {
     } catch (err) {
         console.error(err)
     }
+}
+
+export function show_modal(title, overview, banner, id) {
+    
+}
+
+export function hide_modal() {
+    
 }
