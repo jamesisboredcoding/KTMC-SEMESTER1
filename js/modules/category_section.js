@@ -23,9 +23,6 @@ export class Section {
         const moveRight = cloned.querySelector(".move-right")
         const moveLeft = cloned.querySelector(".move-left")
 
-        this.container = list
-        this.dom = cloned
-
         moveLeft.classList.toggle("hidden", (list.scrollLeft == 0))
         moveRight.classList.toggle("hidden", !(list.scrollLeft + list.clientWidth >= list.scrollWidth - 1))
 
@@ -42,17 +39,21 @@ export class Section {
         })
 
         appendTo.appendChild(cloned)
+
+        this.container = list
+        this.dom = appendTo.querySelector("article:last-of-type")
+        this.hr = appendTo.lastElementChild
     }
 
-    populate(content, type) {
+    populate(content) {
         for (const item of content) {
             const data = [
-                item.title || item.name, item.release_date || item.first_air_date || "NaN", type, item.vote_average,
+                item.title || item.name, item.release_date || item.first_air_date || "NaN", (item.first_air_date ? "TV Show" : "Movie"), item.vote_average,
                 {
                     "banner": `${IMAGE_URL}w1280${item.backdrop_path}`,
                     "poster": `${IMAGE_URL}w500${item.poster_path}`
                 },
-                item.overview
+                item.overview, item.id
             ]
 
             const element = (this.banners ? new Banner(...data) : new Poster(...data))
@@ -63,6 +64,7 @@ export class Section {
 
     remove() {
         this.dom.remove()
+        this.hr.remove()
         delete this
     }
 }

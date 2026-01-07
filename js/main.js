@@ -1,16 +1,28 @@
 import { NotifyInfo } from "./modules/notifications.js"
-import { fetch_content, IMAGE_URL, show_modal } from "./modules/utils.js"
+import { fetch_content, IMAGE_URL, show_modal, set_content_listed, db } from "./modules/utils.js"
 import { Section, Sections } from "./modules/category_section.js"
+import { Poster, Contents } from "./modules/content.js"
 
 // Elements
 
+const main = document.querySelector("main")
+const footer = document.querySelector("footer")
+
 const content_modal = document.querySelector(".content-modal")
 const hero = document.querySelector(".hero")
+const navbar = document.querySelector(".navbar")
+const category_sections = document.querySelector(".category-sections")
+const search_modal = document.querySelector(".search-container")
+const watchlist = document.querySelector(".watch-list")
+
+const nav_buttons = navbar.querySelectorAll(".nav-item")
 
 // Globals
 
 let hero_data = {}
 let current_hero_item = 0
+let current_page = ""
+let hero_loaded = false
 
 // Functions
 
@@ -22,11 +34,14 @@ function sanitize_item(item) {
         type: (item.release_date ? "Movie" : "TV Show"),
         overview: item.overview,
         isMovie: (item.release_date != undefined),
-        backdrop: `${IMAGE_URL}/w1280/${item.backdrop_path}`
+        backdrop: `${IMAGE_URL}/w1280/${item.backdrop_path}`,
+        poster: `${IMAGE_URL}/w500/${item.poster_path}`,
+        id: item.id
     }
 }
 
 function switch_hero(instant) {
+    hero_loaded = true
     setTimeout(() => {
         const item = sanitize_item(hero_data.results[current_hero_item])
         current_hero_item = (current_hero_item + 1 != hero_data.results.length) ? (current_hero_item + 1) : 0
@@ -52,43 +67,129 @@ function switch_hero(instant) {
 }
 
 function load_page(page = "home") {
+    if (page == current_page) return;
+    current_page = page
+
     for (const section of Sections) {
         section.remove()
     }
 
+    for (const content of Contents) {
+        content.remove()
+    }
+
+    footer.classList.remove("abs-bottom")
+    main.classList.remove("flex")
+
+    hero.style.display = "none"
+    watchlist.style.display = "none"
+
     if (page == "home") {
-        fetch_content("hero").then(response => { hero_data = response })
-            .then(() => switch_hero(true))
+        hero.style.display = ""
+        main.classList.remove("off")
 
-        const theatres = new Section("In Theatres", true)
-        theatres.render(document.querySelector(".category-sections"))
+        if (!hero_loaded) {
+            fetch_content("hero").then(response => { hero_data = response })
+                .then(() => switch_hero(true))
+        }
 
-        fetch_content("playing", true)
-            .then(response => theatres.populate(response.results, "Movie"))
+        // Trending
+
+        const trending = new Section("Trending Now", true)
+        trending.render(category_sections)
+
+        fetch_content("trending", true)
+            .then(response => trending.populate(response.results))
+
+        // Popular Movies
 
         const popular = new Section("Popular Movies", true)
-        popular.render(document.querySelector(".category-sections"))
+        popular.render(category_sections)
 
         fetch_content("popular", true)
-            .then(response => popular.populate(response.results, "Movie"))
+            .then(response => popular.populate(response.results))
 
-        const top = new Section("Top Rated Movies", false)
-        top.render(document.querySelector(".category-sections"))
-
-        fetch_content("top", true)
-            .then(response => top.populate(response.results, "Movie"))
-
-        const upcoming = new Section("Up And Coming", false)
-        upcoming.render(document.querySelector(".category-sections"))
-
-        fetch_content("upcoming", true)
-            .then(response => upcoming.populate(response.results, "Movie"))
+        // Popular Shows
 
         const popularShows = new Section("Popular TV Shows", true)
-        popularShows.render(document.querySelector(".category-sections"))
+        popularShows.render(category_sections)
 
         fetch_content("popular", false)
-            .then(response => popularShows.populate(response.results, "TV Show"))
+            .then(response => popularShows.populate(response.results))
+
+        // Top Movies
+
+        const top = new Section("Top Rated Movies", false)
+        top.render(category_sections)
+
+        fetch_content("top", true)
+            .then(response => top.populate(response.results))
+
+        // Top Shows
+
+        const topShows = new Section("Top Rated TV Shows", false)
+        topShows.render(category_sections)
+
+        fetch_content("top", false)
+            .then(response => topShows.populate(response.results))
+    } else if (page == "movies" || page == "shows") {
+        const is_tv = (page == "shows")
+        main.classList.add("off")
+
+        // Popular
+
+        const popular = new Section(`Popular ${is_tv ? "TV Shows" : "Movies"}`, false)
+        popular.render(category_sections)
+
+        fetch_content("popular", !is_tv)
+            .then(response => popular.populate(response.results))
+
+        // Theatres & Airing
+
+        const airing = new Section(`${is_tv ? "Airing Today" : "In Theatres"}`, false)
+        airing.render(category_sections)
+
+        fetch_content(is_tv ? "airing" : "playing", !is_tv)
+            .then(response => airing.populate(response.results))
+
+        // Top
+
+        const top = new Section(`Top Rated ${is_tv ? "TV Shows" : "Movies"}`, false)
+        top.render(category_sections)
+
+        fetch_content("top", !is_tv)
+            .then(response => top.populate(response.results))
+
+        // Upcoming
+
+        const upcoming = new Section(`${!is_tv ? "Up-and-coming" : "On The Air"}`, false)
+        upcoming.render(category_sections)
+
+        fetch_content(is_tv ? "playing" : "upcoming", !is_tv)
+            .then(response => upcoming.populate(response.results))
+    } else if (page == "list") {
+        footer.classList.add("abs-bottom")
+        main.classList.add("h-screen")
+        main.classList.add("flex")
+
+        main.classList.remove("off")
+        watchlist.style.display = ""
+
+        watchlist.querySelector(".empty").style.display = (db.data.listed.length > 0) ? "none" : ""
+
+        for (const [id, type] of db.data.listed) {
+            fetch_content("content", (type == "Movie"), id)
+                .then(response => {
+                    if (!response) return;
+                    const info = sanitize_item(response)
+                    new Poster(info.title, info.year, info.type, info.rating,
+                        {
+                            banner: info.backdrop,
+                            poster: info.poster
+                        },info.overview, info.id)
+                        .render(watchlist)
+                })
+        }
     }
 }
 
@@ -96,15 +197,75 @@ function load_page(page = "home") {
 
 load_page()
 
+for (const nav_item of nav_buttons) {
+    nav_item.addEventListener("click", () => {
+        search_modal.classList.remove("active-modal")
+        if (nav_item.id == "") return;
+
+        for (const other_nav_item of nav_buttons) {
+            if (other_nav_item == nav_item) continue;
+            other_nav_item.classList.remove("selected")
+        }
+
+        nav_item.classList.add("selected")
+        load_page(nav_item.id)
+    })
+}
+
 // Element events
 
 content_modal.querySelector(".exit").addEventListener("click", () => {
     content_modal.classList.remove("active-modal")
 })
 
+content_modal.querySelector(".wl-button").addEventListener("click", (e) => {
+    e.target.classList.toggle("listed")
+
+    const is_listed = e.target.classList.contains("listed")
+    const type = content_modal.querySelector(".type").textContent
+
+    e.target.textContent = is_listed ? "✔" : "+"
+    set_content_listed(e.target.id, type, is_listed)
+})
+
 hero.querySelector(".info-button").addEventListener("click", () => {
     const item = sanitize_item(hero_data.results[current_hero_item - 1])
-    show_modal(item.title, item.overview, item.backdrop, item.rating, item.type, item.year)
+    show_modal(item.title, item.overview, item.backdrop, item.rating, item.type, item.year, item.id)
+})
+
+navbar.querySelector(".search").addEventListener("click", () => {
+    search_modal.classList.add("active-modal")
+})
+
+search_modal.querySelector(".exit").addEventListener("click", () => {
+    search_modal.classList.remove("active-modal")
+})
+
+search_modal.querySelector("input").addEventListener("keydown", (e) => {
+    const search_list = search_modal.querySelector(".list")
+    if (e.key === "Enter") {
+        for (const content of Contents) {
+            if (content.element.parentElement == search_list) {
+                content.remove()
+            }
+        }
+
+        fetch_content("query", e.target.value)
+            .then(response => {
+                console.log(response)
+                for (const item of response.results) {
+                    const info = sanitize_item(item)
+                    const content = new Poster(info.title, info.year, info.type, info.rating,
+                        {
+                            banner: info.backdrop,
+                            poster: info.poster
+                        }, info.overview, info.id)
+
+                    content.render(search_list)
+                    content.makeAutosize(true)
+                }
+            })
+    }
 })
 
 // Window DOM events

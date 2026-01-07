@@ -1,7 +1,9 @@
 import { show_modal } from "./utils.js"
 
+export let Contents = []
+
 class ContentElement {
-    constructor(title, yor, type, rating, images, desc) {
+    constructor(title, yor, type, rating, images, desc, id) {
         this.element = null
         this.title = title
         this.year = yor.split("-")[0]
@@ -9,6 +11,7 @@ class ContentElement {
         this.rating = Number(rating).toFixed(1)
         this.imgs = images
         this.desc = desc
+        this.id = id
     }
 
     create(id, title, rating, y, img) {
@@ -27,7 +30,7 @@ class ContentElement {
         this.setProgress(0)
 
         cloned.addEventListener("click", () => {
-            show_modal(title, this.desc, this.imgs.banner, this.rating, this.type, this.year)
+            show_modal(title, this.desc, this.imgs.banner, this.rating, this.type, this.year, this.id)
         })
 
         return cloned
@@ -40,12 +43,22 @@ class ContentElement {
         progressBar.style.width = `${percentAlpha * 100}%`
         progressBar.classList.toggle("hidden", (percentAlpha == 0))
     }
+
+    makeAutosize(boolean = false) {
+        this.element.classList.toggle("auto-size", boolean)
+    }
+
+    remove() {
+        this.element.remove()
+        delete this
+    }
 }
 
 export class Poster extends ContentElement {
     constructor(...args) {
         super(...args)
         this.img = this.imgs.poster
+        Contents.push(this)
     }
 
     render(appendTo) {
@@ -57,6 +70,7 @@ export class Banner extends ContentElement {
     constructor(...args) {
         super(...args)
         this.img = this.imgs.banner
+        Contents.push(this)
     }
 
     render(appendTo) {

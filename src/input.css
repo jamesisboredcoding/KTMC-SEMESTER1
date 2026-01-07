@@ -45,11 +45,21 @@
         content: "\f002";
         @apply font-fa font-black mr-2;
     }
+
+    .abs-bottom {
+        @apply absolute bottom-0;
+    }
 }
 
 @layer components {
     body {
         @apply bg-bgtxt;
+    }
+
+    main {
+        &.off {
+            @apply mt-15;
+        }
     }
 
     .header {

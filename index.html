@@ -25,7 +25,7 @@
     </header>
 
     <!-- Primary Content -->
-    <main class="absolute w-full -z-1">
+    <main class="absolute w-full -z-1 flex flex-col">
         <!-- Hero banner -->
         <section class="hero backdrop relative w-full h-180 aspect-video bg-cover bg-center">
             <div class="grad-dark absolute w-full h-full"></div>
@@ -54,39 +54,7 @@
                         <button class="move-left -left-4 absolute z-100 h-full w-15 text-5xl bg-surface/20 text-primary cursor-pointer hover:bg-surface/60 hover:transition-colors transition-colors">&lt;</button>
                         <button class="move-right -right-4 absolute z-100 h-full w-15 text-5xl bg-surface/20 text-primary cursor-pointer hover:bg-surface/60 hover:transition-colors transition-colors">&gt;</button>
                         <div class="list flex row gap-4 relative overflow-hidden p-4 scale-x-102">
-                            <!-- Poster template -->
-                            <div id="poster-content" class="item w-55 h-82.5 aspect-2/3 group hover:scale-105 cursor-pointer transition-transform relative" style="display: none;">
-                                <img class="rounded-lg h-full w-full absolute img"
-                                    src="" alt="">
-                                <div
-                                    class="info absolute z-10 bottom-5 left-5 opacity-0 group-hover:opacity-100 group-hover:transition-opacity transition-opacity">
-                                    <h1 class="text-primary font-bold text-2xl text-shadow-lg/50 pr-5 title">Zootopia 3</h1>
-                                    <div class="flex row gap-3">
-                                        <p class="stars text-amber-300 font-bold text-shadow-lg/50 rating">6.7</p>
-                                        <p class="text-primary text-shadow-lg/50 year">2025</p>
-                                    </div>
-                                </div>
-                                <div class="progress bg-surface/70 w-full rounded-b-lg h-2 absolute bottom-0">
-                                    <div class="slider h-full bg-accent rounded-b-lg"></div>
-                                </div>
-                            </div>
-
-                            <!-- Banner template -->
-                            <div id="banner-content" class="item banner aspect-video w-106 h-60 group hover:scale-105 cursor-pointer transition-all relative" style="display: none;">
-                                <img class="rounded-lg h-full w-full absolute img"
-                                    src="" alt="">
-                                <div
-                                    class="info absolute z-10 bottom-5 left-5 opacity-0 group-hover:opacity-100 group-hover:transition-opacity transition-opacity">
-                                    <h1 class="text-primary font-bold text-2xl pr-5 text-shadow-lg/50 title">Zootopia 3</h1>
-                                    <div class="flex row gap-3">
-                                        <p class="stars text-amber-300 font-bold text-shadow-lg/50 rating">6.7</p>
-                                        <p class="text-primary text-shadow-lg/50 year">2025</p>
-                                    </div>
-                                </div>
-                                <div class="progress bg-surface/70 w-full rounded-b-lg h-2 absolute bottom-0">
-                                    <div class="slider h-full bg-accent rounded-b-lg"></div>
-                                </div>
-                            </div>
+                            <!-- movie/show content -->
                         </div>
                     </div>
                 </article>
@@ -94,8 +62,53 @@
             </template>
         </section>
 
+        <!-- Content Templates -->
+        <!-- Poster template -->
+        <div id="poster-content"
+            class="item w-55 h-82.5 aspect-2/3 group hover:scale-105 cursor-pointer transition-transform relative"
+            style="display: none;">
+            <img class="rounded-lg h-full w-full absolute img" src="" alt="">
+            <div
+                class="info absolute z-10 bottom-5 left-5 opacity-0 group-hover:opacity-100 group-hover:transition-opacity transition-opacity">
+                <h1 class="text-primary font-bold text-2xl text-shadow-lg/50 pr-5 title">Zootopia 3</h1>
+                <div class="flex row gap-3">
+                    <p class="stars text-amber-300 font-bold text-shadow-lg/50 rating">6.7</p>
+                    <p class="text-primary text-shadow-lg/50 year">2025</p>
+                </div>
+            </div>
+            <div class="progress bg-surface/70 w-full rounded-b-lg h-2 absolute bottom-0">
+                <div class="slider h-full bg-accent rounded-b-lg"></div>
+            </div>
+        </div>
+        
+        <!-- Banner template -->
+        <div id="banner-content"
+            class="item banner aspect-video w-106 h-60 group hover:scale-105 cursor-pointer transition-all relative"
+            style="display: none;">
+            <img class="rounded-lg h-full w-full absolute img" src="" alt="">
+            <div
+                class="info absolute z-10 bottom-5 left-5 opacity-0 group-hover:opacity-100 group-hover:transition-opacity transition-opacity">
+                <h1 class="text-primary font-bold text-2xl pr-5 text-shadow-lg/50 title">Zootopia 3</h1>
+                <div class="flex row gap-3">
+                    <p class="stars text-amber-300 font-bold text-shadow-lg/50 rating">6.7</p>
+                    <p class="text-primary text-shadow-lg/50 year">2025</p>
+                </div>
+            </div>
+            <div class="progress bg-surface/70 w-full rounded-b-lg h-2 absolute bottom-0">
+                <div class="slider h-full bg-accent rounded-b-lg"></div>
+            </div>
+        </div>
+
+        <!-- Watch List -->
+        <section class="watch-list h-[calc(100%-10rem)] w-full flex row flex-wrap gap-4 pl-6 pt-4 overflow-scroll" style="display: none;">
+            <div class="empty grow pr-6">
+                <h1 class="text-primary font-bold text-5xl text-center mt-20">There's nothing here...</h1>
+                <p class="text-secondary font-semibold text-center my-4">Add movies and shows to your watchlist and they will appear here!</p>
+            </div>
+        </section>
+
         <!-- Footer -->
-        <footer class="w-full h-20 bg-secondary/10 flex justify-center items-center gap-5">
+        <footer class="w-full h-20 bg-secondary/10 flex justify-center items-center gap-5 px-4">
             <h1 class="text-white">Filmflix &copy; 2026</h1>
             <div class="h-8 w-px bg-secondary"></div>
             <button class="text-primary hover:text-accent cursor-pointer">Any feedback?</button>
@@ -113,9 +126,12 @@
 
     <!-- Search Container -->
     <div class="search-container z-100 flex fixed h-screen w-screen justify-center items-center transition-transform p-8">
-        <div class="modal bg-black/60 backdrop-blur-xl h-full w-full rounded-lg relative">
-            <input class="text-primary border-b border-b-primary/30 hover:border-b-primary focus:border-b-primary focus:outline-0 m-8 text-2xl" type="text" placeholder="Search...">
+        <div class="modal bg-black/60 backdrop-blur-xl h-full w-full rounded-lg relative overflow-hidden">
+            <input class="text-primary border-b border-b-primary/30 hover:border-b-primary focus:border-b-primary focus:outline-0 m-8 text-2xl" type="search" placeholder="Search...">
             <button class="exit cursor-pointer absolute text-primary block w-10 aspect-square bg-secondary/50 rounded-full top-5 right-5 hover:bg-secondary/20"><i class="fa-solid fa-xmark"></i></button>
+            <div class="list w-full h-full px-4 pb-30 pt-5 flex flex-row flex-wrap items-start gap-4 overflow-scroll mx-auto">
+                <!-- content -->
+            </div>
         </div>
     </div>
 
