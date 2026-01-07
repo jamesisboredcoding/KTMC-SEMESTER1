@@ -53,7 +53,7 @@ function switch_hero(instant) {
 
 function load_page(page = "home") {
     for (const section of Sections) {
-        section.delete((
+        section.delete()
     }
 
     if (page == "home") {
