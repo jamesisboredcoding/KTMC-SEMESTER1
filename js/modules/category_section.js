@@ -2,7 +2,7 @@ import { Poster, Banner } from "./content.js"
 import { IMAGE_URL } from "./utils.js"
 
 const SCROLL_SPEED = 400
-export const Sections = []
+export let Sections = []
 
 export class Section {
     constructor(title, useBanners = false) {
