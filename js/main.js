@@ -1,6 +1,6 @@
 import { NotifyInfo } from "./modules/notifications.js"
 import { fetch_content, IMAGE_URL, show_modal } from "./modules/utils.js"
-import { Section } from "./modules/category_section.js"
+import { Section, Sections } from "./modules/category_section.js"
 
 // Elements
 
@@ -52,6 +52,10 @@ function switch_hero(instant) {
 }
 
 function load_page(page = "home") {
+    for (const section of Sections) {
+        section.delete((
+    }
+
     if (page == "home") {
         fetch_content("hero").then(response => { hero_data = response })
             .then(() => switch_hero(true))
