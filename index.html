@@ -116,7 +116,7 @@
     <!-- Global elements -->
 
     <!-- Movie Player -->
-    <div class="player w-screen h-screen fixed z-100">
+    <div class="player w-screen h-screen fixed z-100 bg-black">
         <div class="info h-full w-full flex justify-center bg-bgtxt items-center flex-col">
             <h1 class="text-primary text-5xl font-bold text-center label">Loading...</h1>
             <p class="text-secondary text-center text-xl my-5">Tai gali truputi užtrukti.</p>
@@ -167,7 +167,7 @@
                 <button id="fullscreen" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-expand"></i></button>
             </div>
         </div>
-        <video class="w-full h-full object-cover pointer-events-none" crossorigin="anonymous" oncontextmenu="return false" src="">
+        <video class="w-full h-full pointer-events-none aspect-video" crossorigin="anonymous" oncontextmenu="return false" src="">
             <track kind="captions" srclang="en" label="English" default></track>
         </video>
     </div>
