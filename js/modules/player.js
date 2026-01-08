@@ -1,4 +1,4 @@
-import { db } from "./utils.js";
+import { db, fetch_content } from "./utils.js";
 import config from "../config.js";
 
 import srtParser2 from 'https://cdn.jsdelivr.net/npm/srt-parser-2@1.2.3/+esm'
@@ -17,12 +17,20 @@ const eps = player_controls.querySelector("#episodes")
 const bottom_controls = player.querySelector(".bottombar")
 const progress = player.querySelector(".progress")
 const progress_bar = progress.querySelector(".slider .bar")
+const time_stamp = player.querySelector(".time-stamp")
+
+const captions_list = bottom_controls.querySelector(".caption-list")
+const episodes_list = bottom_controls.querySelector(".episode-list")
+
+const captions_container = captions_list.querySelector(".container-list")
+const episodes_container = episodes_list.querySelector(".container-list")
 
 let preloaded = {}
 let current = null
 
 let time_update
 let loaded
+let back_eps
 
 function convertArrayToVtt(srtArray) {
     let vtt = "WEBVTT\n\n";
@@ -30,9 +38,22 @@ function convertArrayToVtt(srtArray) {
         const startTime = cue.startTime.replace(',', '.');
         const endTime = cue.endTime.replace(',', '.');
 
-        vtt += `${cue.id}\n${startTime} --> ${endTime}\n${cue.text}\n\n`;
+        vtt += `${cue.id}\n${startTime} --> ${endTime} line:-3\n${cue.text}\n\n`;
     });
     return vtt;
+}
+
+function load_sub(url) {
+    const track = video.querySelector("track")
+    if (!url) {
+        video.querySelector("track").src = ""
+        return
+    }
+    fetch_sub(url)
+        .then(vtt => video.querySelector("track").src = vtt)
+        .then(() => {
+            track.track.mode = "showing"
+        })
 }
 
 async function fetch_sub(url) {
@@ -48,8 +69,8 @@ async function fetch_sub(url) {
         const srt_array = srt_parser.fromSrt(txt)
 
         const vttString = convertArrayToVtt(srt_array);
-
         const blob = new Blob([vttString], { type: 'text/vtt' });
+
         return URL.createObjectURL(blob);
     } catch (err) {
         console.error(err)
@@ -89,30 +110,48 @@ export function clean_player() {
 
     video.removeEventListener("loadeddata", loaded)
     video.removeEventListener("timeupdate", time_update)
+    episodes_list.querySelector(".back").removeEventListener("click", back_eps)
+
     video.setAttribute("src", "")
+
+    const caption_buttons = captions_container.querySelectorAll("div:not(#caption-list-item)")
+    for (const caption_button of caption_buttons) {
+        caption_button.remove()
+    }
+
+    const ep_buttons = episodes_container.querySelectorAll("div:not(#episode-list-item)")
+    for (const ep_button of ep_buttons) {
+        ep_button.remove()
+    }
 
     let history = db.data.history || []
     if (current) {
-        if (current.type == "movie") {
-            const exists = history.findIndex(data => data.id == current.id)
-            if (exists != -1) {
-                history[exists].t = time
-            } else {
-                history.push(current)
-            }
+        current[0].t = time
+        if (current[1]) {
+            const index = history.findIndex(iterate => {
+                const idMatch = (iterate.id == current[0].id)
+                const isTv = (current[0].type == "tv")
+                const epMatch = (current[0].s == iterate.s) && (current[0].ep == iterate.ep)
+                return idMatch && (isTv ? (epMatch) : true)
+            })
+            history[index] = current[0]
         } else {
-            const exists = history.findIndex(data => (data.id == current.id) && (data.s == current.s && data.ep == current.s))
-            if (!exists) {
-                history[exists].t = time
-            } else {
-                history.push(current)
-            }
+            history.push(current[0])
         }
     }
+
+    db.push({ ...db.data, history: history })
+    current = null
+}
+
+function get_latest_season_episode_watched(id) {
+    return db.data.history.filter(iterate => iterate.id == id)
+        .sort((a, b) => b.s - a.s).filter((iterate, _, array) => array[0].s == iterate.s)
+        .sort((a, b) => b.ep - a.ep)[0]
 }
 
 function fetch_data(id, s, ep, mtype) {
-    let result = {}
+    let result = null
     let is_listed = false
 
     for (const data of db.data.history) {
@@ -135,23 +174,81 @@ function fetch_data(id, s, ep, mtype) {
         result = {
             type: mtype,
             id: id,
-            s: s,
-            ep: ep,
             t: 0,
+        }
+
+        if (mtype == "tv") {
+            result.s = s
+            result.ep = ep
         }
     }
     return [result, is_listed]
 }
 
-export async function query_content(type, id, s = 1, ep = 1) {
+function create_ep_button(appendTo, content, callback, order) {
+    let new_button = document.querySelector("#episode-list-item")
+    new_button = new_button.cloneNode(true)
+    new_button.removeAttribute("id")
+
+    new_button.classList.remove("hidden")
+    new_button.textContent = content
+
+    new_button.addEventListener("click", (e) => {
+        callback(e)
+    })
+
+    new_button.style.order = order
+    appendTo.appendChild(new_button)
+}
+
+function create_cc_button(lan, url) {
+    let new_cc_button = document.querySelector("#caption-list-item")
+    new_cc_button = new_cc_button.cloneNode(true)
+    new_cc_button.removeAttribute("id")
+
+    new_cc_button.classList.remove("hidden")
+    new_cc_button.textContent = lan || "No Subtitles"
+    if (url) new_cc_button.setAttribute("data-url", url)
+    new_cc_button.classList.toggle("selected-caption", (db.data.settings.lan == lan))
+
+    new_cc_button.addEventListener("click", () => {
+        const caption_buttons = captions_container.querySelectorAll("div:not(#caption-list-item)")
+        load_sub(url)
+
+        const dbData = db.data
+        dbData.settings.lan = lan
+        db.push(dbData)
+
+        for (const other_button of caption_buttons) {
+            other_button.classList.toggle("selected-caption", (db.data.settings.lan == other_button.textContent))
+        }
+        new_cc_button.classList.toggle("selected-caption", true)
+    })
+    captions_container.appendChild(new_cc_button)
+}
+
+export async function query_content(type, id, s, ep) {
+    clean_player()
+    const latest_show_watch = (type == "tv" && !s && !ep) ? get_latest_season_episode_watched(id) ?? {}: {}
+
+    if (latest_show_watch.s && latest_show_watch.ep) {
+        s = latest_show_watch.s
+        ep = latest_show_watch.ep
+    } else {
+        if (!s && !ep) {
+            s = 1
+            ep = 1
+        }
+    }
+
+    const video_data = fetch_data(id, s, ep, type)
     video.setAttribute("src", "")
     loading_label.textContent = "Kraunami turinio šaltiniai..."
 
     info.style.display = ""
-    bottom_controls.style.display = "none"
     progress.style.display = "none"
 
-    let result = preloaded[id]
+    let result = preloaded[id + `${(type == "tv") ? `-${s}-${ep}` : ""}`]
     if (!result) {
         for (let i = 0; i < 1; i++) {
             try {
@@ -169,7 +266,7 @@ export async function query_content(type, id, s = 1, ep = 1) {
 
                 const data = await response.json()
                 if (data && data.sources) {
-                    preloaded[id] = data
+                    preloaded[id + `${(type == "tv") ? `-${s}-${ep}` : ""}`] = data
                     result = data
                     break
                 }
@@ -180,9 +277,7 @@ export async function query_content(type, id, s = 1, ep = 1) {
     }
 
     if (result) {
-        const video_data = fetch_data(id, s, ep, type)
         const block_default_qualities = ["ORG", "4K"]
-
         let current_src = ""
         current = video_data
 
@@ -203,6 +298,75 @@ export async function query_content(type, id, s = 1, ep = 1) {
             current_src = result.sources[0].url
         }
 
+        create_cc_button(null)
+        for (const caption_data of result.subtitles) {
+            create_cc_button(caption_data.language, caption_data.url)
+        }
+
+        let season_data = null
+        let max_seasons = 0
+
+        fetch_content("content", (type == "movie"), id)
+            .then(response => {
+                player_controls.querySelector(".name").textContent = (response.title || response.name)
+                player_controls.querySelector(".title").style.display = (type == "tv") ? "" : "none"
+                player_controls.querySelector(".episode").style.display = (type == "tv") ? "" : "none"
+
+                if (type == "tv") {
+                    max_seasons = response.number_of_seasons
+                    player_controls.querySelector(".episode").textContent = `S${s}:E${ep}`
+
+                    fetch_content("content", false, `${id}/season/${s}`)
+                        .then(season => {
+                            const episodes = season.episodes
+                            const current_episode = episodes.filter(iterate => iterate.season_number == s)
+                                .find(iterate => iterate.episode_number == ep)
+                            player_controls.querySelector(".title").textContent = current_episode.name
+                            season_data = season
+                        })
+                    .then(() => {
+                        const reset = () => {
+                            for (let i = 0; i < max_seasons; i++) {
+                                fetch_content("content", false, `${id}/season/${i + 1}`)
+                                    .then(season => {
+                                        create_ep_button(episodes_container, `Season ${i + 1}`, () => {
+                                            const ep_buttons = episodes_container.querySelectorAll("div:not(#episode-list-item)")
+                                            const sorted = season.episodes.sort((a, b) => a.episode_number - b.episode_number)
+
+                                            episodes_list.querySelector(".back").classList.remove("hidden")
+
+                                            for (const ep_button of ep_buttons) {
+                                                ep_button.remove()
+                                            }
+
+                                            for (const episode of sorted) {
+                                                create_ep_button(episodes_container, `E${episode.episode_number}: ${episode.name}`, () => {
+                                                    query_content(type, id, i + 1, episode.episode_number)
+                                                })
+                                            }
+                                        }, i)
+                                    })
+                            }
+                        }
+
+                        back_eps = () => {
+                            const ep_buttons = episodes_container.querySelectorAll("div:not(#episode-list-item)")
+                            episodes_list.querySelector(".back").classList.add("hidden")
+
+                            for (const ep_button of ep_buttons) {
+                                ep_button.remove()
+                            }
+                            reset()
+                        }
+                        reset()
+
+                        episodes_list.querySelector(".back").classList.add("hidden")
+                        episodes_list.querySelector(".back").addEventListener("click", back_eps)
+                    })
+                }
+        
+            })
+
         loaded = () => {
             info.style.display = "none"
             bottom_controls.style.display = ""
@@ -210,27 +374,37 @@ export async function query_content(type, id, s = 1, ep = 1) {
             next_ep.style.display = (type == "tv") ? "" : "none"
             eps.style.display = (type == "tv") ? "" : "none"
 
-            fetch_sub(result.subtitles[0].url)
-                .then(vtt => video.querySelector("track").src = vtt)
-                .then(() => {
-                    const track = video.querySelector("track")
-                    const cues = track.insertAdjacentText.cues
-                    
-                    for (let i = 0; i < cues.length; i++) {
-                        cues[i].line = -5
-                    }
-                    track.track.mode = "showing"
-                })
+            play.classList.toggle("fa-play", false)
+            play.classList.toggle("fa-pause", true)
+
+            const caption_buttons = captions_container.querySelectorAll("div:not(#caption-list-item)")
+            const default_sub = Array.from(caption_buttons).find(iterate => iterate.textContent == db.data.settings.lan)
+
+            if (default_sub) load_sub(default_sub.getAttribute("data-url"));           
+            if (!current) return;
+
+            video.currentTime = parseFloat(current[0].t)
             video.play()
+        }
+
+        const next_listen = () => {
+            if (!season_data) return
+            const new_ep = season_data.episodes.find(iterate => iterate.episode_number == ep + 1) || -1
+            const new_s = (new_ep != -1) ? s : (s + 1) <= max_seasons ? (s + 1) : s
+            query_content(type, id, new_s, new_ep.episode_number ?? 1)
         }
 
         time_update = () => {
             const percent = (video.currentTime / video.duration) * 100
             progress_bar.style.width = `${percent}%`
+            time_stamp.textContent = `${new Date(video.currentTime * 1000).toISOString().slice(11, 19)}`
         }
 
         video.addEventListener("loadeddata", loaded, { once: true })
         video.addEventListener("timeupdate", time_update)
+        player_controls.querySelector("#next").addEventListener("click", next_listen, { once: true })
+
+        player_controls.querySelector(".volume-slider input").value = db.data.settings.volume
 
         loading_label.textContent = "Kraunamas vaizdas..."
         video.setAttribute("src", current_src)

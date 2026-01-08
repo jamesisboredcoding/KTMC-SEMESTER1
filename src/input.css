@@ -53,6 +53,14 @@
     .faded {
         @apply opacity-0 pointer-events-none transition-opacity;
     }
+
+    .selected-caption {
+        @apply bg-accent;
+    }
+
+    .inactive {
+        @apply cursor-none;
+    }
 }
 
 @layer components {
@@ -170,6 +178,16 @@
         &.active-modal {
             @apply opacity-100 visible pointer-events-auto scale-100 transition-all;
         }
+
+        .bottombar button:not(.list-item) {
+            @apply flex justify-center items-center;
+            & > i {
+                @apply transition-transform;
+                &:hover {
+                    @apply scale-110 transition-transform;
+                }
+            }
+        }
     }
 }
 
@@ -212,6 +230,11 @@
 
 .loading {
     animation: spin 1s infinite;
+}
+
+video::cue {
+    background-color: transparent;
+    text-shadow: 3px 3px 4px black;
 }
 
 /* Spinning */

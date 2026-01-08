@@ -32,10 +32,6 @@ let mouse_timeout = null
 
 // Functions
 
-function update_video() {
-    toggle_pause(true); toggle_pause(false)
-}
-
 function sanitize_item(item) {
     return {
         title: item.title || item.name,
@@ -44,8 +40,8 @@ function sanitize_item(item) {
         type: (item.release_date ? "Movie" : "TV Show"),
         overview: item.overview,
         isMovie: (item.release_date != undefined),
-        backdrop: `${IMAGE_URL}/w1280/${item.backdrop_path}`,
-        poster: `${IMAGE_URL}/w500/${item.poster_path}`,
+        backdrop: `${IMAGE_URL}w1280${item.backdrop_path}`,
+        poster: `${IMAGE_URL}w500${item.poster_path}`,
         id: item.id
     }
 }
@@ -232,7 +228,8 @@ content_modal.querySelector(".wl-button").addEventListener("click", (e) => {
     e.target.classList.toggle("listed")
 
     const is_listed = e.target.classList.contains("listed")
-    const type = content_modal.querySelector(".type").textContent
+    const type_label = content_modal.querySelector(".type")
+    const type = type_label.classList.contains("movie") ? "Movie" : "TV Show"
 
     e.target.textContent = is_listed ? "✔" : "+"
     set_content_listed(e.target.id, type, is_listed)
@@ -254,8 +251,18 @@ hero.querySelector(".info-button").addEventListener("click", () => {
     show_modal(item.title, item.overview, item.backdrop, item.rating, item.type, item.year, item.id)
 })
 
+hero.querySelector(".play-button").addEventListener("click", () => {
+    const item = sanitize_item(hero_data.results[current_hero_item - 1])
+    const type_label = hero.querySelector(".type")
+    const type = type_label.classList.contains("movie") ? "movie" : "tv"
+
+    player.classList.add("active-modal")
+    query_content(type, item.id)
+})
+
 navbar.querySelector(".search").addEventListener("click", () => {
     search_modal.classList.add("active-modal")
+    search_modal.querySelector("input").focus()
 })
 
 search_modal.querySelector(".exit").addEventListener("click", () => {
@@ -281,7 +288,6 @@ search_modal.querySelector("input").addEventListener("keydown", (e) => {
                             banner: info.backdrop,
                             poster: info.poster
                         }, info.overview, info.id)
-
                     content.render(search_list)
                     content.makeAutosize(true)
                 }
@@ -306,13 +312,11 @@ player_controls.querySelector("#play").addEventListener("click", () => {
 player_controls.querySelector("#forward").addEventListener("click", () => {
     if (!player.classList.contains("active-modal")) return;
     video.currentTime = video.currentTime + 15
-    update_video()
 })
 
 player_controls.querySelector("#backward").addEventListener("click", () => {
     if (!player.classList.contains("active-modal")) return;
     video.currentTime = video.currentTime - 15
-    update_video()
 })
 
 player_controls.querySelector(".volume-slider input").addEventListener("change", (e) => {
@@ -329,14 +333,20 @@ progress_bar.addEventListener("click", (e) => {
     const initial_pos = e.clientX - rect.left
     const percent = initial_pos / rect.width
     const time = percent * player.querySelector("video").duration
-
     player.querySelector("video").currentTime = time
-    update_video()
 })
 
 player.querySelector(".exit").addEventListener("click", () => {
     player.classList.remove("active-modal")
     clean_player()
+})
+
+player_controls.querySelector("#sub").addEventListener("click", () => {
+    player_controls.querySelector(".caption-list").classList.toggle("hidden")
+})
+
+player_controls.querySelector("#episodes").addEventListener("click", () => {
+    player_controls.querySelector(".episode-list").classList.toggle("hidden")
 })
 
 // Window DOM events
@@ -346,6 +356,7 @@ window.addEventListener("scroll", () => {
 })
 
 window.addEventListener("mousemove", () => {
+    document.body.classList.remove("inactive")
     if (!player.classList.contains("active-modal")) return;
     if (mouse_timeout) {
         player_controls.classList.remove("faded")
@@ -354,6 +365,7 @@ window.addEventListener("mousemove", () => {
 
     mouse_timeout = setTimeout(() => {
         player_controls.classList.add("faded")
+        document.body.classList.add("inactive")
     }, 3000)
 })
 
@@ -365,10 +377,8 @@ document.addEventListener("keydown", (e) => {
         toggle_pause()
     } else if (e.key.toLowerCase() == "arrowleft") {
         video.currentTime = video.currentTime - 15
-        update_video()
     } else if (e.key.toLowerCase() == "arrowright") {
         video.currentTime = video.currentTime + 15
-        update_video()
     }
 })
 
