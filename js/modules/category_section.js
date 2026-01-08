@@ -28,7 +28,7 @@ export class Section {
 
         list.addEventListener("scroll", () => {
             moveLeft.classList.toggle("hidden", (list.scrollLeft == 0))
-             moveRight.classList.toggle("hidden", (list.scrollLeft + list.clientWidth >= list.scrollWidth - 1))
+            moveRight.classList.toggle("hidden", (list.scrollLeft + list.clientWidth >= list.scrollWidth - 1))
         })
 
         moveRight.addEventListener("click", () => {

@@ -49,6 +49,10 @@
     .abs-bottom {
         @apply absolute bottom-0;
     }
+
+    .faded {
+        @apply opacity-0 pointer-events-none transition-opacity;
+    }
 }
 
 @layer components {

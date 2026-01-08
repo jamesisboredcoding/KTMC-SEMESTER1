@@ -20,6 +20,7 @@ const player = document.querySelector(".player")
 const nav_buttons = navbar.querySelectorAll(".nav-item")
 const player_controls = player.querySelector(".controls")
 const progress_bar = player.querySelector(".progress .slider")
+const video = document.querySelector("video")
 
 // Globals
 
@@ -27,8 +28,13 @@ let hero_data = {}
 let current_hero_item = 0
 let current_page = ""
 let hero_loaded = false
+let mouse_timeout = null
 
 // Functions
+
+function update_video() {
+    toggle_pause(true); toggle_pause(false)
+}
 
 function sanitize_item(item) {
     return {
@@ -297,6 +303,27 @@ player_controls.querySelector("#play").addEventListener("click", () => {
     toggle_pause()
 })
 
+player_controls.querySelector("#forward").addEventListener("click", () => {
+    if (!player.classList.contains("active-modal")) return;
+    video.currentTime = video.currentTime + 15
+    update_video()
+})
+
+player_controls.querySelector("#backward").addEventListener("click", () => {
+    if (!player.classList.contains("active-modal")) return;
+    video.currentTime = video.currentTime - 15
+    update_video()
+})
+
+player_controls.querySelector(".volume-slider input").addEventListener("change", (e) => {
+    if (!player.classList.contains("active-modal")) return;
+    video.volume = (e.target.value / 100)
+
+    const data = db.data
+    data.settings.volume = e.target.value
+    db.push(data)
+})
+
 progress_bar.addEventListener("click", (e) => {
     const rect = progress_bar.getBoundingClientRect()
     const initial_pos = e.clientX - rect.left
@@ -304,7 +331,7 @@ progress_bar.addEventListener("click", (e) => {
     const time = percent * player.querySelector("video").duration
 
     player.querySelector("video").currentTime = time
-    toggle_pause(true); toggle_pause(false)
+    update_video()
 })
 
 player.querySelector(".exit").addEventListener("click", () => {
@@ -318,12 +345,30 @@ window.addEventListener("scroll", () => {
     document.querySelector(".header").classList.toggle("scrolled", scrollY > 0)
 })
 
+window.addEventListener("mousemove", () => {
+    if (!player.classList.contains("active-modal")) return;
+    if (mouse_timeout) {
+        player_controls.classList.remove("faded")
+        clearTimeout(mouse_timeout)
+    }
+
+    mouse_timeout = setTimeout(() => {
+        player_controls.classList.add("faded")
+    }, 3000)
+})
+
 document.addEventListener("keydown", (e) => {
     if (!player.classList.contains("active-modal")) return;
     if (e.key.toLowerCase() == "f") {
         toggle_fullscreen()
     } else if (e.key == " " || e.key.toLowerCase() == "enter") {
         toggle_pause()
+    } else if (e.key.toLowerCase() == "arrowleft") {
+        video.currentTime = video.currentTime - 15
+        update_video()
+    } else if (e.key.toLowerCase() == "arrowright") {
+        video.currentTime = video.currentTime + 15
+        update_video()
     }
 })
 

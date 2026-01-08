@@ -1,6 +1,8 @@
 import { db } from "./utils.js";
 import config from "../config.js";
 
+import srtParser2 from 'https://cdn.jsdelivr.net/npm/srt-parser-2@1.2.3/+esm'
+
 const player = document.querySelector(".player")
 const info = player.querySelector(".info")
 const loading_label = info.querySelector(".label")
@@ -9,6 +11,9 @@ const player_controls = player.querySelector(".controls")
 
 const fs = player_controls.querySelector("#fullscreen").querySelector(".fa-solid")
 const play = player_controls.querySelector("#play").querySelector(".fa-solid")
+const next_ep = player_controls.querySelector("#next")
+const eps = player_controls.querySelector("#episodes")
+
 const bottom_controls = player.querySelector(".bottombar")
 const progress = player.querySelector(".progress")
 const progress_bar = progress.querySelector(".slider .bar")
@@ -18,6 +23,38 @@ let current = null
 
 let time_update
 let loaded
+
+function convertArrayToVtt(srtArray) {
+    let vtt = "WEBVTT\n\n";
+    srtArray.forEach((cue) => {
+        const startTime = cue.startTime.replace(',', '.');
+        const endTime = cue.endTime.replace(',', '.');
+
+        vtt += `${cue.id}\n${startTime} --> ${endTime}\n${cue.text}\n\n`;
+    });
+    return vtt;
+}
+
+async function fetch_sub(url) {
+    try {
+        const response = await fetch(url)
+        if (!response.ok) {
+            console.error(response.error)
+            return
+        }
+
+        const txt = await response.text()
+        const srt_parser = new srtParser2()
+        const srt_array = srt_parser.fromSrt(txt)
+
+        const vttString = convertArrayToVtt(srt_array);
+
+        const blob = new Blob([vttString], { type: 'text/vtt' });
+        return URL.createObjectURL(blob);
+    } catch (err) {
+        console.error(err)
+    }
+}
 
 export function toggle_fullscreen() {
     const fullscreened = fs.classList.contains("fa-compress")
@@ -162,11 +199,28 @@ export async function query_content(type, id, s = 1, ep = 1) {
             }
         }
 
+        if (current_src == "" && result.sources.length == 1) {
+            current_src = result.sources[0].url
+        }
+
         loaded = () => {
             info.style.display = "none"
             bottom_controls.style.display = ""
             progress.style.display = ""
+            next_ep.style.display = (type == "tv") ? "" : "none"
+            eps.style.display = (type == "tv") ? "" : "none"
 
+            fetch_sub(result.subtitles[0].url)
+                .then(vtt => video.querySelector("track").src = vtt)
+                .then(() => {
+                    const track = video.querySelector("track")
+                    const cues = track.insertAdjacentText.cues
+                    
+                    for (let i = 0; i < cues.length; i++) {
+                        cues[i].line = -5
+                    }
+                    track.track.mode = "showing"
+                })
             video.play()
         }
 

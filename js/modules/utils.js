@@ -17,7 +17,8 @@ export const db = new Database({
     ],
     settings: {
         lan: null,
-        quality: "360P"
+        quality: "360P",
+        volume: 50,
     }
 })
 

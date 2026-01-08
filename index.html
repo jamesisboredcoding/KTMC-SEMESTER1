@@ -122,7 +122,7 @@
             <p class="text-secondary text-center text-xl my-5">Tai gali truputi užtrukti.</p>
             <img class="loading invert-100 aspect-square h-10" src="./img/load.png" alt="">
         </div>
-        <div class="controls w-full h-ful">
+        <div class="controls w-full faded">
             <div class="topbar w-full h-20 absolute top-0 z-10 flex items-center">
                 <button class="exit ml-4 text-2xl cursor-pointer text-primary block w-12 aspect-square bg-secondary/50 rounded-full hover:bg-secondary/20"><i class="fa-solid fa-angle-left"></i></button>
             </div>
@@ -153,7 +153,9 @@
                 <button id="fullscreen" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-expand"></i></button>
             </div>
         </div>
-        <video class="w-full h-full object-cover pointer-events-none" oncontextmenu="return false" src=""></video>
+        <video class="w-full h-full object-cover pointer-events-none" crossorigin="anonymous" oncontextmenu="return false" src="">
+            <track kind="captions" srclang="en" label="English" default></track>
+        </video>
     </div>
 
     <!-- Search Container -->
