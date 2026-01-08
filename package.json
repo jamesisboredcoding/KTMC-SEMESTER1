@@ -1,7 +1,6 @@
 {
   "name": "ktmc-semesterproject-1",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,5 +12,14 @@
   "dependencies": {
     "@tailwindcss/cli": "^4.1.18",
     "tailwindcss": "^4.1.18"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesisboredcoding/KTMC-SEMESTER1.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jamesisboredcoding/KTMC-SEMESTER1/issues"
+  },
+  "homepage": "https://github.com/jamesisboredcoding/KTMC-SEMESTER1#readme",
+  "description": ""
 }

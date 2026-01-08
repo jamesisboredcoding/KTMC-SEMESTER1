@@ -2,6 +2,7 @@ import { NotifyInfo } from "./modules/notifications.js"
 import { fetch_content, IMAGE_URL, show_modal, set_content_listed, db } from "./modules/utils.js"
 import { Section, Sections } from "./modules/category_section.js"
 import { Poster, Contents } from "./modules/content.js"
+import { query_content, clean_player, toggle_fullscreen, toggle_pause } from "./modules/player.js"
 
 // Elements
 
@@ -14,8 +15,11 @@ const navbar = document.querySelector(".navbar")
 const category_sections = document.querySelector(".category-sections")
 const search_modal = document.querySelector(".search-container")
 const watchlist = document.querySelector(".watch-list")
+const player = document.querySelector(".player")
 
 const nav_buttons = navbar.querySelectorAll(".nav-item")
+const player_controls = player.querySelector(".controls")
+const progress_bar = player.querySelector(".progress .slider")
 
 // Globals
 
@@ -49,7 +53,7 @@ function switch_hero(instant) {
         hero.querySelector(".title").textContent = item.title
         hero.querySelector(".rating").textContent = item.rating
         hero.querySelector(".year").textContent = item.year
-        hero.querySelector(".type").textContent = item.type
+        hero.querySelector(".type").textContent = (item.type == "Movie") ? "Filmas" : "Serialas"
         hero.querySelector(".overview").textContent = item.overview
 
         hero.querySelector(".type").classList.toggle("movie", item.isMovie)
@@ -95,7 +99,7 @@ function load_page(page = "home") {
 
         // Trending
 
-        const trending = new Section("Trending Now", true)
+        const trending = new Section("Labiausiai žiūrimi", true)
         trending.render(category_sections)
 
         fetch_content("trending", true)
@@ -103,7 +107,7 @@ function load_page(page = "home") {
 
         // Popular Movies
 
-        const popular = new Section("Popular Movies", true)
+        const popular = new Section("Populiariausi filmai", true)
         popular.render(category_sections)
 
         fetch_content("popular", true)
@@ -111,7 +115,7 @@ function load_page(page = "home") {
 
         // Popular Shows
 
-        const popularShows = new Section("Popular TV Shows", true)
+        const popularShows = new Section("Populiariausi serialai", true)
         popularShows.render(category_sections)
 
         fetch_content("popular", false)
@@ -119,7 +123,7 @@ function load_page(page = "home") {
 
         // Top Movies
 
-        const top = new Section("Top Rated Movies", false)
+        const top = new Section("Geriausiai vertinami filmai", false)
         top.render(category_sections)
 
         fetch_content("top", true)
@@ -127,7 +131,7 @@ function load_page(page = "home") {
 
         // Top Shows
 
-        const topShows = new Section("Top Rated TV Shows", false)
+        const topShows = new Section("Geriausiai vertinami serialai", false)
         topShows.render(category_sections)
 
         fetch_content("top", false)
@@ -138,7 +142,7 @@ function load_page(page = "home") {
 
         // Popular
 
-        const popular = new Section(`Popular ${is_tv ? "TV Shows" : "Movies"}`, false)
+        const popular = new Section(`Populiarūs ${is_tv ? "serialai" : "filmai"}`, false)
         popular.render(category_sections)
 
         fetch_content("popular", !is_tv)
@@ -146,7 +150,7 @@ function load_page(page = "home") {
 
         // Theatres & Airing
 
-        const airing = new Section(`${is_tv ? "Airing Today" : "In Theatres"}`, false)
+        const airing = new Section(`${is_tv ? "Rodoma laida" : "Jau cinemose"}`, false)
         airing.render(category_sections)
 
         fetch_content(is_tv ? "airing" : "playing", !is_tv)
@@ -154,7 +158,7 @@ function load_page(page = "home") {
 
         // Top
 
-        const top = new Section(`Top Rated ${is_tv ? "TV Shows" : "Movies"}`, false)
+        const top = new Section(`Geriausiai vertinami ${is_tv ? "serialai" : "filmai"}`, false)
         top.render(category_sections)
 
         fetch_content("top", !is_tv)
@@ -162,7 +166,7 @@ function load_page(page = "home") {
 
         // Upcoming
 
-        const upcoming = new Section(`${!is_tv ? "Up-and-coming" : "On The Air"}`, false)
+        const upcoming = new Section(`${!is_tv ? "Kylantys filmai" : "Serialai eteryje"}`, false)
         upcoming.render(category_sections)
 
         fetch_content(is_tv ? "playing" : "upcoming", !is_tv)
@@ -228,6 +232,17 @@ content_modal.querySelector(".wl-button").addEventListener("click", (e) => {
     set_content_listed(e.target.id, type, is_listed)
 })
 
+content_modal.querySelector(".play-button").addEventListener("click", () => {
+    player.classList.add("active-modal")
+    content_modal.classList.remove("active-modal")
+
+    const type_label = content_modal.querySelector(".type")
+    const type = type_label.classList.contains("movie") ? "movie" : "tv"
+    const id = content_modal.querySelector(".play-button").id
+
+    query_content(type, id)
+})
+
 hero.querySelector(".info-button").addEventListener("click", () => {
     const item = sanitize_item(hero_data.results[current_hero_item - 1])
     show_modal(item.title, item.overview, item.backdrop, item.rating, item.type, item.year, item.id)
@@ -268,8 +283,48 @@ search_modal.querySelector("input").addEventListener("keydown", (e) => {
     }
 })
 
+player_controls.querySelector("#volume").addEventListener("click", () => {
+    player_controls.querySelector(".volume-slider").classList.toggle("hidden")
+})
+
+player_controls.querySelector("#fullscreen").addEventListener("click", () => {
+    if (!player.classList.contains("active-modal")) return;
+    toggle_fullscreen()
+})
+
+player_controls.querySelector("#play").addEventListener("click", () => {
+    if (!player.classList.contains("active-modal")) return;
+    toggle_pause()
+})
+
+progress_bar.addEventListener("click", (e) => {
+    const rect = progress_bar.getBoundingClientRect()
+    const initial_pos = e.clientX - rect.left
+    const percent = initial_pos / rect.width
+    const time = percent * player.querySelector("video").duration
+
+    player.querySelector("video").currentTime = time
+    toggle_pause(true); toggle_pause(false)
+})
+
+player.querySelector(".exit").addEventListener("click", () => {
+    player.classList.remove("active-modal")
+    clean_player()
+})
+
 // Window DOM events
 
 window.addEventListener("scroll", () => {
     document.querySelector(".header").classList.toggle("scrolled", scrollY > 0)
 })
+
+document.addEventListener("keydown", (e) => {
+    if (!player.classList.contains("active-modal")) return;
+    if (e.key.toLowerCase() == "f") {
+        toggle_fullscreen()
+    } else if (e.key == " " || e.key.toLowerCase() == "enter") {
+        toggle_pause()
+    }
+})
+
+window.addEventListener("beforeunload", () => clean_player())

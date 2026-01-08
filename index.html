@@ -15,11 +15,11 @@
         <h1 class="text-3xl text-primary font-semibold font-display grow">Filmflix</h1>
         <div class="navbar absolute h-full w-full flex justify-center">
             <div class="buttons h-full">
-                <button id="home" class="nav-item home selected">Home</button>
-                <button id="movies" class="nav-item movie">Movies</button>
-                <button id="shows" class="nav-item tv">TV Shows</button>
-                <button id="list" class="nav-item wlist">My List</button>
-                <button class="nav-item search">Search</button>
+                <button id="home" class="nav-item home selected">Pagrindinis</button>
+                <button id="movies" class="nav-item movie">Filmai</button>
+                <button id="shows" class="nav-item tv">Serialai</button>
+                <button id="list" class="nav-item wlist">Mano Sarašas</button>
+                <button class="nav-item search">Ieškoti</button>
             </div>
         </div>
     </header>
@@ -39,8 +39,8 @@
                 </div>
                 <p class="desc text-primary w-1/2 text-shadow-lg overview">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit accusamus id aspernatur distinctio facere minima similique ab numquam ad quae maiores cumque, incidunt amet recusandae.</p>
                 <div class="buttons mt-5">
-                    <button class="play-button">Play</button>
-                    <button class="info-button">More Info</button>
+                    <button class="play-button">Žiūrėti</button>
+                    <button class="info-button">Daugiau Info</button>
                 </div>
             </div>
         </section>
@@ -102,32 +102,64 @@
         <!-- Watch List -->
         <section class="watch-list h-[calc(100%-10rem)] w-full flex row flex-wrap gap-4 pl-6 pt-4 overflow-scroll" style="display: none;">
             <div class="empty grow pr-6">
-                <h1 class="text-primary font-bold text-5xl text-center mt-20">There's nothing here...</h1>
-                <p class="text-secondary font-semibold text-center my-4">Add movies and shows to your watchlist and they will appear here!</p>
+                <h1 class="text-primary font-bold text-5xl text-center mt-20">Čia nieko nėra...</h1>
+                <p class="text-secondary font-semibold text-center my-4">Įtraukite filmus ir serialus į savo žiūrimųjų sąrašą ir jie bus rodomi čia!</p>
             </div>
         </section>
 
         <!-- Footer -->
         <footer class="w-full h-20 bg-secondary/10 flex justify-center items-center gap-5 px-4">
             <h1 class="text-white">Filmflix &copy; 2026</h1>
-            <div class="h-8 w-px bg-secondary"></div>
-            <button class="text-primary hover:text-accent cursor-pointer">Any feedback?</button>
-            <div class="h-8 w-px bg-secondary"></div>
-            <h1 class="text-white">Made by <a class="hover:text-accent" href="https://github.com/jamesisboredcoding/KTMC-SEMESTER1">james</a> from <span class="italic text-amber-300">3PHP-1</span></h1>
         </footer>
     </main>
 
     <!-- Global elements -->
 
     <!-- Movie Player -->
-    <div class="player w-screen h-screen fixed hidden">
-        <!-- <video class="w-full h-full object-cover pointer-events-none" oncontextmenu="return false" src="https://usa7-nas24-1.shegu.net/vip/p1/movie_mp4_h264/2012/2/8/218/movie.218.2012.360p.H264.20250617044208.mp4?KEY1=foJCT2C-OGHW2iVF9hGrWQ&KEY2=1767708408&KEY3=1284102&KEY4=world&KEY7=febbox_video_quality_list_v3&KEY8=1284102"></video> -->
+    <div class="player w-screen h-screen fixed z-100">
+        <div class="info h-full w-full flex justify-center bg-bgtxt items-center flex-col">
+            <h1 class="text-primary text-5xl font-bold text-center label">Loading...</h1>
+            <p class="text-secondary text-center text-xl my-5">Tai gali truputi užtrukti.</p>
+            <img class="loading invert-100 aspect-square h-10" src="./img/load.png" alt="">
+        </div>
+        <div class="controls w-full h-ful">
+            <div class="topbar w-full h-20 absolute top-0 z-10 flex items-center">
+                <button class="exit ml-4 text-2xl cursor-pointer text-primary block w-12 aspect-square bg-secondary/50 rounded-full hover:bg-secondary/20"><i class="fa-solid fa-angle-left"></i></button>
+            </div>
+            <div class="progress w-full h-5 absolute z-10 bottom-25 px-7">
+                <div class="slider bg-secondary w-full h-2 rounded-lg flex items-center cursor-pointer">
+                    <div class="bar relative rounded-lg h-full bg-accent">
+                        <div class="bg-accent aspect-square w-6 rounded-full absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottombar w-full h-25 absolute z-10 bottom-0 flex flex-row items-center gap-8 px-5">
+                <button id="play" class="text-5xl cursor-pointer text-primary"><i class="fa-solid fa-pause"></i></button>
+                <button id="backward" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-rotate-left"></i></button>
+                <button id="forward" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-rotate-right"></i></button>
+                <button id="volume" class="text-4xl cursor-pointer text-primary relative"><i class="fa-solid fa-volume-high">
+                    <div class="volume-slider py-4 absolute top-0 h-50 w-full -translate-y-full bg-secondary/10 rounded-lg hidden">
+                        <input class="vertical h-full" orient="vertical" max="100" min="0" type="range">
+                    </div>
+                </i></button>
+                <div class="data grow flex justify-center items-center gap-3">
+                    <span class="text-primary font-bold text-2xl name">Lucifer</span>
+                    <span class="text-primary/25 font-medium text-xl episode">S1:E5</span>
+                    <span class="text-primary/25 font-medium text-xl title">Pilot</span>
+                </div>
+                <button id="next" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-forward-step"></i></button>
+                <button id="episodes" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-layer-group"></i></button>
+                <button id="sub" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-closed-captioning"></i></button>
+                <button id="fullscreen" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-expand"></i></button>
+            </div>
+        </div>
+        <video class="w-full h-full object-cover pointer-events-none" oncontextmenu="return false" src=""></video>
     </div>
 
     <!-- Search Container -->
     <div class="search-container z-100 flex fixed h-screen w-screen justify-center items-center transition-transform p-8">
         <div class="modal bg-black/60 backdrop-blur-xl h-full w-full rounded-lg relative overflow-hidden">
-            <input class="text-primary border-b border-b-primary/30 hover:border-b-primary focus:border-b-primary focus:outline-0 m-8 text-2xl" type="search" placeholder="Search...">
+            <input class="text-primary border-b border-b-primary/30 hover:border-b-primary focus:border-b-primary focus:outline-0 m-8 text-2xl" type="search" placeholder="Ieškoti...">
             <button class="exit cursor-pointer absolute text-primary block w-10 aspect-square bg-secondary/50 rounded-full top-5 right-5 hover:bg-secondary/20"><i class="fa-solid fa-xmark"></i></button>
             <div class="list w-full h-full px-4 pb-30 pt-5 flex flex-row flex-wrap items-start gap-4 overflow-scroll mx-auto">
                 <!-- content -->
@@ -151,7 +183,7 @@
                     </div>
                     <p class="desc text-primary w-full text-shadow-lg/40 overview">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit accusamus id aspernatur distinctio facere minima similique ab numquam ad quae maiores cumque, incidunt amet recusandae.</p>
                     <div class="buttons my-5 flex">
-                        <button class="play-button">Play</button>
+                        <button class="play-button">Žiūrėti</button>
                         <button class="wl-button">+</button> <!-- ✔ -->
                     </div>
                 </div>

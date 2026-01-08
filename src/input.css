@@ -69,7 +69,7 @@
     }
 
     .nav-item {
-        @apply cursor-pointer mx-3 h-full w-30 font-medium font-display text-white text-lg;
+        @apply cursor-pointer mx-3 h-full w-35 font-medium font-display text-white text-lg;
         &:hover, &.selected {
             @apply text-accent border-b;
         }
@@ -160,6 +160,13 @@
             }
         }
     }
+
+    .player {
+        @apply invisible opacity-0 pointer-events-none scale-75;
+        &.active-modal {
+            @apply opacity-100 visible pointer-events-auto scale-100 transition-all;
+        }
+    }
 }
 
 /* Native CSS */
@@ -197,4 +204,15 @@
         height: 100%;
         transition: opacity 1s;
     }
+}
+
+.loading {
+    animation: spin 1s infinite;
+}
+
+/* Spinning */
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }

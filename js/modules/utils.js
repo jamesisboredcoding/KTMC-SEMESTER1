@@ -12,10 +12,12 @@ export const FEMBOX_API = "https://fembox.aether.mom"
 
 export const db = new Database({
     listed: [],
-    history: {},
+    history: [
+        // { type: "movie", id: 98465654, s: 1, ep: 2, t: 500 },
+    ],
     settings: {
         lan: null,
-        quality: "1080p"
+        quality: "360P"
     }
 })
 
@@ -59,8 +61,10 @@ export function show_modal(title, overview, banner, rating, type, year, id) {
     content_modal.querySelector(".title").textContent = title
     content_modal.querySelector(".overview").textContent = overview
     content_modal.querySelector(".rating").textContent = rating
-    content_modal.querySelector(".type").textContent = type
+    content_modal.querySelector(".type").textContent = (type == "Movie" ? "Filmas" : "Serialas")
     content_modal.querySelector(".year").textContent = year
+
+    content_modal.querySelector("img.banner").setAttribute("src", "")
     content_modal.querySelector("img.banner").setAttribute("src", banner)
 
     content_modal.querySelector(".type").classList.toggle("movie", (type == "Movie"))
@@ -69,6 +73,8 @@ export function show_modal(title, overview, banner, rating, type, year, id) {
     content_modal.querySelector(".wl-button").classList.toggle("listed", is_content_listed(id))
     content_modal.querySelector(".wl-button").textContent = (is_content_listed(id)) ? "✔" : "+"
     content_modal.querySelector(".wl-button").setAttribute("id", id)
+
+    content_modal.querySelector(".play-button").setAttribute("id", content_modal.querySelector(".wl-button").id)
 
     content_modal.classList.add("active-modal")
     search_modal.classList.remove("active-modal")
@@ -88,7 +94,7 @@ export async function fetch_content(type, movie, extra) {
             const data = await response.json()
             const filtered = data.results.filter((info) => (info.original_language == "en"))
             const top = filtered.sort((a, b) => b.popularity - a.popularity)
-                .slice(0, 7)
+                .slice(0, 11)
             return { results: top }
         },
         "popular": async () => {
@@ -213,7 +219,16 @@ export async function fetch_content(type, movie, extra) {
 
     const validatedType = validTypes[type]
     if (validatedType) {
-        return await validatedType()
+        let result = null
+        for (let i = 0; i < 3; i++) {
+            try {
+                result = await validatedType()
+                if (result) break;
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        return result
     } else {
         console.log("type does not exist")
     }
