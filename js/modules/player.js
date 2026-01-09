@@ -278,7 +278,6 @@ export async function query_content(type, id, s, ep, useHls = true) {
         let current_src = ""
 
         current = video_data
-
         if (result.sources) {
             for (const source_data of result.sources) {
                 if (source_data.quality == db.data.settings.quality) {
@@ -304,6 +303,11 @@ export async function query_content(type, id, s, ep, useHls = true) {
                 hls = true
                 current_src = result.hls
             }
+        }
+
+        if (current_src == "") {
+            query_content(type, id, s, ep, false)
+            return
         }
 
         create_cc_button(null)
