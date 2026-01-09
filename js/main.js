@@ -99,6 +99,25 @@ function load_page(page = "home") {
                 .then(() => switch_hero(true))
         }
 
+        // Watch history
+
+        console.log(db.data.history.length)
+        if (db.data.history.length > 0) {
+            const history = new Section("Žiūrėjimo Istorija")
+            history.render(category_sections)
+
+            let ids_shown = []
+            for (const content_data of db.data.history) {
+                fetch_content("content", (content_data.type == "movie"), content_data.id)
+                    .then(response => {
+                        if (!ids_shown.find(id => content_data.id == id)) {
+                            ids_shown.push(content_data.id)
+                            history.populate([{ ...response, meta: { t: content_data.t, d: content_data.d } }])
+                        }
+                    })
+            }
+        }
+
         // Trending
 
         const trending = new Section("Labiausiai žiūrimi", true)
@@ -338,6 +357,7 @@ progress_bar.addEventListener("click", (e) => {
 
 player.querySelector(".exit").addEventListener("click", () => {
     player.classList.remove("active-modal")
+    load_page()
     clean_player()
 })
 

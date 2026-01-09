@@ -3,7 +3,7 @@ import { show_modal } from "./utils.js"
 export let Contents = []
 
 class ContentElement {
-    constructor(title, yor, type, rating, images, desc, id) {
+    constructor(title, yor, type, rating, images, desc, id, meta) {
         this.element = null
         this.title = title
         this.year = yor.split("-")[0]
@@ -12,6 +12,7 @@ class ContentElement {
         this.imgs = images
         this.desc = desc
         this.id = id
+        this.meta = meta
     }
 
     create(id, title, rating, y, img) {
@@ -27,12 +28,11 @@ class ContentElement {
         cloned.querySelector(".img").setAttribute("src", img)
 
         this.element = cloned
-        this.setProgress(0)
+        this.setProgress( (this.meta && this.meta.t) ? (this.meta.t / this.meta.d) : 0 )
 
         cloned.addEventListener("click", () => {
             show_modal(title, this.desc, this.imgs.banner, this.rating, this.type, this.year, this.id)
         })
-
         return cloned
     }
 

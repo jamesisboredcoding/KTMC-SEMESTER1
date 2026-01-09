@@ -102,8 +102,6 @@ export function toggle_pause(force) {
 }
 
 export function clean_player() {
-    const time = video.currentTime
-
     info.style.display = "none"
     bottom_controls.style.display = "none"
     progress.style.display = "none"
@@ -112,7 +110,9 @@ export function clean_player() {
     video.removeEventListener("timeupdate", time_update)
     episodes_list.querySelector(".back").removeEventListener("click", back_eps)
 
+    video.pause()
     video.removeAttribute("src")
+    video.load()
 
     const caption_buttons = captions_container.querySelectorAll("div:not(#caption-list-item)")
     for (const caption_button of caption_buttons) {
@@ -126,7 +126,7 @@ export function clean_player() {
 
     let history = db.data.history || []
     if (current) {
-        current[0].t = time
+        current[0].t = video.currentTime
         if (current[1]) {
             const index = history.findIndex(iterate => {
                 const idMatch = (iterate.id == current[0].id)
@@ -144,7 +144,7 @@ export function clean_player() {
     current = null
 }
 
-function get_latest_season_episode_watched(id) {
+export function get_latest_season_episode_watched(id) {
     return db.data.history.filter(iterate => iterate.id == id)
         .sort((a, b) => b.s - a.s).filter((iterate, _, array) => array[0].s == iterate.s)
         .sort((a, b) => b.ep - a.ep)[0]
@@ -175,6 +175,7 @@ function fetch_data(id, s, ep, mtype) {
             type: mtype,
             id: id,
             t: 0,
+            d: 0,
         }
 
         if (mtype == "tv") {
@@ -305,7 +306,7 @@ export async function query_content(type, id, s, ep, useHls = true) {
             }
         }
 
-        if (current_src == "") {
+        if (current_src == "" && !hls) {
             query_content(type, id, s, ep, false)
             return
         }
@@ -395,6 +396,7 @@ export async function query_content(type, id, s, ep, useHls = true) {
             if (default_sub) load_sub(default_sub.getAttribute("data-url"));           
             if (!current) return;
 
+            current[0].d = video.duration
             video.currentTime = parseFloat(current[0].t)
             video.play()
         }

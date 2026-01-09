@@ -53,7 +53,7 @@ export class Section {
                     "banner": `${IMAGE_URL}w1280${item.backdrop_path}`,
                     "poster": `${IMAGE_URL}w500${item.poster_path}`
                 },
-                item.overview, item.id
+                item.overview, item.id, item.meta
             ]
 
             const element = (this.banners ? new Banner(...data) : new Poster(...data))
