@@ -112,7 +112,7 @@ export function clean_player() {
     video.removeEventListener("timeupdate", time_update)
     episodes_list.querySelector(".back").removeEventListener("click", back_eps)
 
-    video.setAttribute("src", "")
+    video.removeAttribute("src")
 
     const caption_buttons = captions_container.querySelectorAll("div:not(#caption-list-item)")
     for (const caption_button of caption_buttons) {
@@ -227,7 +227,7 @@ function create_cc_button(lan, url) {
     captions_container.appendChild(new_cc_button)
 }
 
-export async function query_content(type, id, s, ep) {
+export async function query_content(type, id, s, ep, useHls = true) {
     clean_player()
     const latest_show_watch = (type == "tv" && !s && !ep) ? get_latest_season_episode_watched(id) ?? {}: {}
 
@@ -257,15 +257,10 @@ export async function query_content(type, id, s, ep) {
                 }
 
                 const episode_endpoint = (type == "tv") ? `/${s}/${ep}` : ""
-                const response = await fetch(`https://fembox.aether.mom/${type}/${id}${episode_endpoint}?ui=${config.SRC_TOKEN}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
+                const response = await fetch(`https://fembox.aether.mom/${useHls ? "hls/" : ""}${type}/${id}${episode_endpoint}?ui=${config.SRC_TOKEN}`, { method: "GET", headers: {"Content-Type": "application/json"}})
 
                 const data = await response.json()
-                if (data && data.sources) {
+                if (data && (data.sources ?? data.hls)) {
                     preloaded[id + `${(type == "tv") ? `-${s}-${ep}` : ""}`] = data
                     result = data
                     break
@@ -278,24 +273,37 @@ export async function query_content(type, id, s, ep) {
 
     if (result) {
         const block_default_qualities = ["ORG", "4K"]
+
+        let hls = null
         let current_src = ""
+
         current = video_data
 
-        for (const source_data of result.sources) {
-            if (source_data.quality == db.data.settings.quality) {
-                current_src = source_data.url
+        if (result.sources) {
+            for (const source_data of result.sources) {
+                if (source_data.quality == db.data.settings.quality) {
+                    current_src = source_data.url
+                }
             }
-        }
 
-        for (const source_data of result.sources) {
-            if (!block_default_qualities.includes(source_data.quality)) {
-                current_src = source_data.url
-                break
+            for (const source_data of result.sources) {
+                if (!block_default_qualities.includes(source_data.quality)) {
+                    current_src = source_data.url
+                    break
+                }
             }
-        }
 
-        if (current_src == "" && result.sources.length == 1) {
-            current_src = result.sources[0].url
+            if (current_src == "" && result.sources.length == 1) {
+                current_src = result.sources[0].url
+            }
+        } else if (result.hls) {
+            if (Hls.isSupported()) {
+                hls = new Hls()
+                hls.loadSource(result.hls)
+            } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+                hls = true
+                current_src = result.hls
+            }
         }
 
         create_cc_button(null)
@@ -407,6 +415,14 @@ export async function query_content(type, id, s, ep) {
         player_controls.querySelector(".volume-slider input").value = db.data.settings.volume
 
         loading_label.textContent = "Kraunamas vaizdas..."
-        video.setAttribute("src", current_src)
+        if (hls) {
+            if (hls == true) {
+                video.setAttribute("src", current_src)
+            } else {
+                hls.attachMedia(video)
+            }
+        } else {
+            video.setAttribute("src", current_src)
+        }
     }
 }
