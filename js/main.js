@@ -36,7 +36,7 @@ function sanitize_item(item) {
     return {
         title: item.title || item.name,
         rating: Number(item.voting_average || item.vote_average).toFixed(1),
-        year: (item.release_date || item.first_air_date).split("-")[0],
+        year: (item.release_date ?? item.first_air_date ?? "").split("-")[0],
         type: (item.release_date ? "Movie" : "TV Show"),
         overview: item.overview,
         isMovie: (item.release_date != undefined),
@@ -101,7 +101,6 @@ function load_page(page = "home") {
 
         // Watch history
 
-        console.log(db.data.history.length)
         if (db.data.history.length > 0) {
             const history = new Section("Žiūrėjimo Istorija")
             history.render(category_sections)
@@ -299,7 +298,6 @@ search_modal.querySelector("input").addEventListener("keydown", (e) => {
 
         fetch_content("query", e.target.value)
             .then(response => {
-                console.log(response)
                 for (const item of response.results) {
                     const info = sanitize_item(item)
                     const content = new Poster(info.title, info.year, info.type, info.rating,
