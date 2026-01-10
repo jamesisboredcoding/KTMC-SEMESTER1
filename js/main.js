@@ -355,8 +355,8 @@ progress_bar.addEventListener("click", (e) => {
 
 player.querySelector(".exit").addEventListener("click", () => {
     player.classList.remove("active-modal")
-    load_page()
     clean_player()
+    load_page()
 })
 
 player_controls.querySelector("#sub").addEventListener("click", () => {

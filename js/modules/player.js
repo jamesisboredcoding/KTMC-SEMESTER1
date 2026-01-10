@@ -102,6 +102,7 @@ export function toggle_pause(force) {
 }
 
 export function clean_player() {
+    const time = video.currentTime
     info.style.display = "none"
     bottom_controls.style.display = "none"
     progress.style.display = "none"
@@ -126,7 +127,7 @@ export function clean_player() {
 
     let history = db.data.history || []
     if (current) {
-        current[0].t = video.currentTime
+        current[0].t = time
         if (current[1]) {
             const index = history.findIndex(iterate => {
                 const idMatch = (iterate.id == current[0].id)
