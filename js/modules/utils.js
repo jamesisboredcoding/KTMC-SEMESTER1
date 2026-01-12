@@ -204,16 +204,22 @@ export async function fetch_content(type, movie, extra) {
         },
         "query": async () => {
             const query = encodeURIComponent(movie)
-            const response = await fetch(TMBD_API + `/search/multi?query=${query}&page=${extra || "1"}`, options)
 
-            if (!response.ok) {
-                console.error(response.error)
+            const movie_response = await fetch(TMBD_API + `/search/movie?query=${query}&page=${extra || "1"}`, options)
+            const tv_response = await fetch(TMBD_API + `/search/tv?query=${query}&page=${extra || "1"}`, options)
+
+            if (!movie_response.ok || !tv_response.ok) {
+                console.error(movie_response.error + ":" + tv_response.error)
                 return
             }
-            
-            const data = await response.json()
-            const filtered = data.results.filter(item => (item.media_type == "movie" || item.media_type == "tv"))
-                .sort((a, b) => b.popularity - a.popularity)
+
+            const movie_data = await movie_response.json()
+            const tv_data = await tv_response.json()
+
+            const data = [...movie_data.results, ...tv_data.results]
+            const filtered = data.sort((a, b) => b.popularity - a.popularity)
+
+            console.log(tv_data)
             return { results: filtered }
         }
     }

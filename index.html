@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./dist/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    <link rel="shortcut icon" href="./img/icon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="./dist/img/icon.png" type="image/x-icon">
     <title>Filmflix</title>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header h-15 border-b border-b-primary/20 flex items-center row fixed w-screen">
-        <img class="h-full py-2 ml-8" src="./img/icon.png" alt="">
-        <h1 class="text-3xl text-primary font-semibold font-display grow">Filmflix</h1>
-        <div class="navbar absolute h-full w-full flex justify-center">
-            <div class="buttons h-full">
+    <!-- Header h-30 -->
+    <header class="header md:h-15 border-b border-b-primary/20 flex items-center flex-col md:flex-row fixed w-screen">
+        <h1 class="title text-2xl text-primary font-semibold font-display before:h-15 before:w-10 grow relative my-4 md:mt-3 ml-15">Filmflix</h1>
+        <div class="navbar h-full w-full flex flex-col justify-center shrink">
+            <div class="buttons h-full flex flex-row justify-center w-full">
                 <button id="home" class="nav-item home selected">Pagrindinis</button>
                 <button id="movies" class="nav-item movie">Filmai</button>
                 <button id="shows" class="nav-item tv">Serialai</button>
@@ -30,14 +29,14 @@
         <section class="hero backdrop relative w-full h-180 aspect-video bg-cover bg-center">
             <div class="grad-dark absolute w-full h-full"></div>
             <div class="blurrer backdrop-blur-sm translate-y-1/2 w-full h-20 absolute bottom-0"></div>
-            <div class="hero-info absolute bottom-20 left-20">
-                <h1 class="text-primary font-black text-6xl text-shadow-lg/40 w-1/2 title">Stranger Things</h1>
+            <div class="hero-info absolute bottom-20 left-10 md:left-20">
+                <h1 class="text-primary font-black text-6xl text-shadow-lg/40 pr-10 md:w-1/2 title">Stranger Things</h1>
                 <div class="info-content flex row gap-5 my-5">
                     <p class="stars text-amber-300 font-bold rating">6.7</p>
                     <p class="text-primary year">2025</p>
                     <p class="movie text-primary type">Movie</p>
                 </div>
-                <p class="desc text-primary w-1/2 text-shadow-lg overview">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit accusamus id aspernatur distinctio facere minima similique ab numquam ad quae maiores cumque, incidunt amet recusandae.</p>
+                <p class="desc text-primary pr-10 md:w-1/2 text-shadow-lg overview">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit accusamus id aspernatur distinctio facere minima similique ab numquam ad quae maiores cumque, incidunt amet recusandae.</p>
                 <div class="buttons mt-5">
                     <button class="play-button">Žiūrėti</button>
                     <button class="info-button">Daugiau Info</button>
@@ -65,7 +64,7 @@
         <!-- Content Templates -->
         <!-- Poster template -->
         <div id="poster-content"
-            class="item w-55 h-82.5 aspect-2/3 group hover:scale-105 cursor-pointer transition-transform relative"
+            class="poster-item item aspect-2/3 group hover:scale-105 cursor-pointer transition-transform relative"
             style="display: none;">
             <img class="rounded-lg h-full w-full absolute img" src="" alt="">
             <div
@@ -100,7 +99,7 @@
         </div>
 
         <!-- Watch List -->
-        <section class="watch-list h-[calc(100%-10rem)] w-full flex row flex-wrap gap-4 pl-6 pt-4 overflow-scroll" style="display: none;">
+        <section class="watch-list h-[calc(100%-10rem)] w-full flex row flex-wrap gap-4 pl-6 pt-4 mt-15 md:mt-0 overflow-scroll" style="display: none;">
             <div class="empty grow pr-6">
                 <h1 class="text-primary font-bold text-5xl text-center mt-20">Čia nieko nėra...</h1>
                 <p class="text-secondary font-semibold text-center my-4">Įtraukite filmus ir serialus į savo žiūrimųjų sąrašą ir jie bus rodomi čia!</p>
@@ -120,7 +119,7 @@
         <div class="info h-full w-full flex justify-center bg-bgtxt items-center flex-col">
             <h1 class="text-primary text-5xl font-bold text-center label">Loading...</h1>
             <p class="text-secondary text-center text-xl my-5">Tai gali truputi užtrukti.</p>
-            <img class="loading invert-100 aspect-square h-10" src="./img/load.png" alt="">
+            <img class="loading invert-100 aspect-square h-10" src="./dist/img/load.png" alt="">
         </div>
         <div class="controls w-full faded">
             <div class="topbar w-full h-20 absolute top-0 z-10 flex items-center">
@@ -184,8 +183,8 @@
     </div>
 
     <!-- Modal -->
-    <div class="content-modal flex fixed h-screen w-screen justify-center items-center transition-transform">
-        <div class="modal bg-surface/95 backdrop-blur-xl w-1/2 h-[80vh] rounded-lg relative overflow-y-scroll">
+    <div class="content-modal flex fixed h-screen w-screen justify-center items-end md:items-center transition-transform">
+        <div class="modal bg-surface/95 backdrop-blur-xl w-full md:w-1/2 h-[80vh] rounded-lg relative overflow-y-scroll">
             <div class="banner relative">
                 <div class="blurrer backdrop-blur-md w-full h-20 absolute bottom-0"></div>
                 <img class="banner aspect-video w-full rounded-t-lg" src="https://image.tmdb.org/t/p/original/8zbAoryWbtH0DKdev8abFAjdufy.jpg" alt="">

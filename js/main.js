@@ -29,6 +29,9 @@ let current_hero_item = 0
 let current_page = ""
 let hero_loaded = false
 let mouse_timeout = null
+let search_scroll = null
+let search_page = 0
+let search_loaded = []
 
 // Functions
 
@@ -288,17 +291,13 @@ search_modal.querySelector(".exit").addEventListener("click", () => {
 })
 
 search_modal.querySelector("input").addEventListener("keydown", (e) => {
-    const search_list = search_modal.querySelector(".list")
-    if (e.key === "Enter") {
-        for (const content of Contents) {
-            if (content.element.parentElement == search_list) {
-                content.remove()
-            }
-        }
-
-        fetch_content("query", e.target.value)
+    const load_results = (p) => {
+        search_page = p ?? 1
+        fetch_content("query", e.target.value, p)
             .then(response => {
                 for (const item of response.results) {
+                    if (search_loaded.includes(item.id)) continue;
+
                     const info = sanitize_item(item)
                     const content = new Poster(info.title, info.year, info.type, info.rating,
                         {
@@ -307,8 +306,33 @@ search_modal.querySelector("input").addEventListener("keydown", (e) => {
                         }, info.overview, info.id)
                     content.render(search_list)
                     content.makeAutosize(true)
+
+                    content.element.classList.add("grown")
+                    search_loaded.push(info.id)
                 }
             })
+    }
+
+    const search_list = search_modal.querySelector(".list")
+    if (e.key === "Enter") {
+        search_modal.querySelector("input").blur()
+        for (const content of Contents) {
+            if (content.element.parentElement == search_list) {
+                content.remove()
+            }
+        }
+
+        search_loaded = []
+        load_results()
+
+        if (!search_scroll) {
+            search_scroll = () => {
+                if (search_list.scrollTop + search_list.offsetHeight >= search_list.scrollHeight) {
+                    load_results(search_page + 1)
+                }
+            }
+            search_list.addEventListener("scroll", search_scroll)
+        }
     }
 })
 
@@ -357,6 +381,9 @@ player.querySelector(".exit").addEventListener("click", () => {
     player.classList.remove("active-modal")
     clean_player()
     load_page()
+
+    document.exitFullscreen()
+    window.location.reload()
 })
 
 player_controls.querySelector("#sub").addEventListener("click", () => {
