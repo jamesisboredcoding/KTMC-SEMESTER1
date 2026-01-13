@@ -97,7 +97,7 @@ function load_page(page = "home") {
         hero.style.display = ""
         main.classList.remove("off")
 
-        if (!hero_loaded) {
+        if (!hero_loaded ?? !hero_loaded) {
             fetch_content("hero").then(response => { hero_data = response })
                 .then(() => switch_hero(true))
         }

@@ -133,37 +133,37 @@
                 </div>
                 <p class="text-primary font-semibold inline-block ml-5 time-stamp">00:00:00</p>
             </div>
-            <div class="bottombar w-full h-25 absolute z-10 bottom-0 flex flex-row items-center gap-8 px-5">
-                <button id="play" class="text-5xl cursor-pointer text-primary"><i class="fa-solid fa-pause"></i></button>
-                <button id="backward" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-rotate-left"></i></button>
-                <button id="forward" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-rotate-right"></i></button>
-                <button id="volume" class="text-4xl cursor-pointer text-primary relative"><i class="fa-solid fa-volume-high"></i>
+            <div class="bottombar w-full h-25 absolute z-10 bottom-0 flex flex-row items-center gap-4 md:gap-8 px-5">
+                <button id="play" class="text-3xl md:text-5xl cursor-pointer text-primary"><i class="fa-solid fa-pause"></i></button>
+                <button id="backward" class="text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-rotate-left"></i></button>
+                <button id="forward" class="text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-rotate-right"></i></button>
+                <button id="volume" class="text-3xl md:text-4xl cursor-pointer text-primary relative"><i class="fa-solid fa-volume-high"></i>
                     <div class="volume-slider py-4 absolute top-0 h-50 w-full -translate-y-full bg-secondary/10 rounded-lg hidden">
                         <input class="vertical h-full" orient="vertical" max="100" min="0" type="range">
                     </div>
                 </button>
                 <div class="data grow flex justify-center items-center bottom-0 gap-3">
-                    <span class="text-primary font-bold text-xl text-shadow-lg/30 name"></span>
-                    <span class="text-primary/35 font-medium text-lg text-shadow-lg/30 episode"></span>
-                    <span class="text-primary/35 font-medium text-lg text-shadow-lg/30 title"></span>
+                    <span class="text-primary font-bold text-[0px] md:text-xl text-center md:text-left text-shadow-lg/30 name"></span>
+                    <span class="text-primary/35 font-medium text-[0px] md:text-lg text-shadow-lg/30 episode"></span>
+                    <span class="text-primary/35 font-medium text-[0px] md:text-lg text-shadow-lg/30 title"></span>
                 </div>
-                <button id="next" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-forward-step"></i></button>
-                <button id="episodes" class="relative text-4xl cursor-pointer text-primary"><i class="fa-solid fa-layer-group"></i>
-                    <div class="episode-list cursor-auto absolute top-0 right-0 -translate-y-full bg-surface rounded-lg w-120 h-80 flex flex-col items-start overflow-scroll hidden">
+                <button id="next" class="text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-forward-step"></i></button>
+                <button id="episodes" class="relative text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-layer-group"></i>
+                    <div class="episode-list cursor-auto absolute top-0 -right-20 md:right-0 -translate-y-full bg-surface rounded-lg w-80 md:w-120 h-80 flex flex-col items-start overflow-scroll hidden">
                         <div class="back cursor-pointer text-primary m-2"><i class="fa-solid fa-angle-left"></i></div>
                         <div class="w-full grow py-4 container-list flex flex-col">
                             <div id="episode-list-item" class="hidden text-left text-2xl font-semibold bg-secondary/30 hover:bg-secondary hover:cursor-pointer min-h-15 w-full flex justify-start pl-3 align-middle pt-3">Episode 5</div>
                         </div>
                     </div>
                 </button>
-                <button id="sub" class="relative text-4xl cursor-pointer text-primary"><i class="fa-solid fa-closed-captioning"></i>
+                <button id="sub" class="relative text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-closed-captioning"></i>
                     <div class="caption-list cursor-auto absolute top-0 right-0 -translate-y-full bg-surface rounded-lg w-80 h-80 flex flex-col items-start overflow-scroll hidden">
                         <div class="w-full grow py-4 container-list flex flex-col">
                             <div id="caption-list-item" class="hidden text-left text-2xl font-semibold bg-secondary/30 not-[.selected-caption]:hover:bg-secondary hover:cursor-pointer h-15 w-full flex justify-start pl-5 pt-3 align-middle">English</div>
                         </div>
                     </div>
                 </button>
-                <button id="fullscreen" class="text-4xl cursor-pointer text-primary"><i class="fa-solid fa-expand"></i></button>
+                <button id="fullscreen" class="text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-expand"></i></button>
             </div>
         </div>
         <video class="w-full h-full pointer-events-none aspect-video" crossorigin="anonymous" oncontextmenu="return false" src="">

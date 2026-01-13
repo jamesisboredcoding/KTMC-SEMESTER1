@@ -185,7 +185,7 @@
         }
 
         .bottombar button:not(.list-item) {
-            @apply flex justify-center items-center;
+            @apply flex justify-center items-center shrink aspect-square;
             & > i {
                 @apply transition-transform;
                 &:hover {
