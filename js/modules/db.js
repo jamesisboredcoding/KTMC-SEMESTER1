@@ -1,3 +1,5 @@
+import Notify from "./notifications.js"
+
 export default class Database {
     constructor(def) {
         this._data = this.data || def
@@ -25,6 +27,7 @@ export default class Database {
             }
         } catch (err) {
             console.error(err)
+            Notify("error", "There was an error saving to DB")
         }
     }
 }

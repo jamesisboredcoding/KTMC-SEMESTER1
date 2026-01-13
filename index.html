@@ -208,22 +208,26 @@
     </div>
 
     <!-- Notifications -->
-    <div class="notifications hidden m-4 right-0 top-0 fixed w-90 h-80 flex flex-col gap-2">
-        <div class="error bg-error w-full h-15 rounded-lg flex row items-center hide-notif">
+    <div class="notifications m-4 right-0 top-0 fixed w-90 h-80 flex flex-col z-101 gap-2">
+        <div class="error bg-error w-full h-15 rounded-lg flex row items-center hide-notif hidden">
             <i class="fa-solid fa-xmark text-3xl mx-3 text-white"></i>
             <p class="text-white text-md">Successfully loaded video server!</p>
+            <button class="absolute right-2 h-1/2 aspect-square cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div class="warning bg-warning w-full h-15 rounded-lg flex row items-center hide-notif">
+        <div class="warning bg-warning w-full h-15 rounded-lg flex row items-center hide-notif hidden">
             <i class="fa-solid fa-exclamation text-3xl mx-3 text-black"></i>
             <p class="text-black text-md">Successfully loaded video server!</p>
+            <button class="absolute right-2 h-1/2 aspect-square cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div class="info bg-info w-full h-15 rounded-lg flex row items-center hide-notif">
+        <div class="info bg-info w-full h-15 rounded-lg flex row items-center hide-notif hidden">
             <i class="fa-solid fa-info text-3xl mx-3 text-black"></i>
             <p class="text-black text-md">Successfully loaded video server!</p>
+            <button class="absolute right-2 h-1/2 aspect-square cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div class="success bg-success w-full h-15 rounded-lg flex row items-center hide-notif">
+        <div class="success bg-success w-full h-15 rounded-lg flex row items-center hide-notif hidden">
             <i class="fa-solid fa-check text-3xl mx-3 text-black"></i>
             <p class="text-black text-md">Successfully loaded video server!</p>
+            <button class="absolute right-2 h-1/2 aspect-square cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
         </div>
     </div>
 

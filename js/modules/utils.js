@@ -1,5 +1,6 @@
 import config from "../config.js"
 import Database from "./db.js"
+import Notify from "./notifications.js"
 
 const content_modal = document.querySelector(".content-modal")
 const search_modal = document.querySelector(".search-container")
@@ -238,5 +239,6 @@ export async function fetch_content(type, movie, extra) {
         return result
     } else {
         console.log("type does not exist")
+        Notify("error", "There was an error fetching data")
     }
 }

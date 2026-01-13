@@ -1,4 +1,4 @@
-import { NotifyInfo } from "./modules/notifications.js"
+import Notify from "./modules/notifications.js"
 import { fetch_content, IMAGE_URL, show_modal, set_content_listed, db } from "./modules/utils.js"
 import { Section, Sections } from "./modules/category_section.js"
 import { Poster, Contents } from "./modules/content.js"

@@ -2,6 +2,7 @@ import { db, fetch_content } from "./utils.js";
 import config from "../config.js";
 
 import srtParser2 from 'https://cdn.jsdelivr.net/npm/srt-parser-2@1.2.3/+esm'
+import Notify from "./notifications.js";
 
 const player = document.querySelector(".player")
 const info = player.querySelector(".info")
@@ -74,6 +75,7 @@ async function fetch_sub(url) {
         return URL.createObjectURL(blob);
     } catch (err) {
         console.error(err)
+        Notify("error", "There was an error fethcing subtitles")
     }
 }
 
@@ -269,6 +271,7 @@ export async function query_content(type, id, s, ep, useHls = true) {
                 }
             } catch (err) {
                 console.error(err)
+                Notify("error", "Failed to load sources")
             }
         }
     }
@@ -308,6 +311,7 @@ export async function query_content(type, id, s, ep, useHls = true) {
         }
 
         if (current_src == "" && !hls) {
+            Notify("info", "Reloading using original source")
             query_content(type, id, s, ep, false)
             return
         }
@@ -382,6 +386,8 @@ export async function query_content(type, id, s, ep, useHls = true) {
             })
 
         loaded = () => {
+            Notify("success", "Loaded content source successfully")
+
             info.style.display = "none"
             bottom_controls.style.display = ""
             progress.style.display = ""

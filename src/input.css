@@ -81,7 +81,7 @@
         .title::before {
             content: "";
             background: url(../img/icon.png);
-            @apply bg-cover bg-center block absolute top-1/2 left-0 -translate-x-full -translate-y-1/2;
+            @apply bg-cover bg-center block absolute top-1/2 left-0 -translate-x-full aspect-square -translate-y-1/2;
         }
     }
 
@@ -142,7 +142,7 @@
 
     .notifications {
         & > * {
-            @apply transition-transform;
+            @apply transition-transform relative;
         }
     }
 
