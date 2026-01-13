@@ -1,5 +1,4 @@
 import { db, fetch_content } from "./utils.js";
-import config from "../config.js";
 
 import srtParser2 from 'https://cdn.jsdelivr.net/npm/srt-parser-2@1.2.3/+esm'
 import Notify from "./notifications.js";
@@ -261,7 +260,7 @@ export async function query_content(type, id, s, ep, useHls = true) {
                 }
 
                 const episode_endpoint = (type == "tv") ? `/${s}/${ep}` : ""
-                const response = await fetch(`https://fembox.aether.mom/${useHls ? "hls/" : ""}${type}/${id}${episode_endpoint}?ui=${config.SRC_TOKEN}`, { method: "GET", headers: {"Content-Type": "application/json"}})
+                const response = await fetch(`https://filmflix-proxy-fix.vercel.app/src/${useHls ? "hls/" : ""}${type}/${id}${episode_endpoint}?ui=${config.SRC_TOKEN}`, { method: "GET", headers: {"Content-Type": "application/json"}})
 
                 const data = await response.json()
                 if (data && (data.sources ?? data.hls)) {
@@ -386,8 +385,6 @@ export async function query_content(type, id, s, ep, useHls = true) {
             })
 
         loaded = () => {
-            Notify("success", "Loaded content source successfully")
-
             info.style.display = "none"
             bottom_controls.style.display = ""
             progress.style.display = ""

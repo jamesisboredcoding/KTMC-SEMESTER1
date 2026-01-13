@@ -1,4 +1,3 @@
-import config from "../config.js"
 import Database from "./db.js"
 import Notify from "./notifications.js"
 
@@ -7,9 +6,8 @@ const search_modal = document.querySelector(".search-container")
 
 // Constants
 
-export const TMBD_API = "https://api.themoviedb.org/3"
+export const TMBD_API = "https://filmflix-proxy-fix.vercel.app/tmdb"
 export const IMAGE_URL = "https://image.tmdb.org/t/p/"
-export const FEMBOX_API = "https://fembox.aether.mom"
 
 export const db = new Database({
     listed: [],
@@ -27,7 +25,6 @@ export const options = {
     method: "GET",
     headers: {
         "accept": "application/json",
-        ...get_auth()
     }
 }
 
@@ -36,10 +33,6 @@ export const options = {
 function is_content_listed(id) {
     let listed = db.data.listed || []
     return listed.some(listed => listed[0] == id)
-}
-
-export function get_auth() {
-    return { "Authorization": `Bearer ${config.TMBD_KEY}` }
 }
 
 export function set_content_listed(id, type, boolean = false) {
