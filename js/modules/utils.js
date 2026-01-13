@@ -25,7 +25,9 @@ export const options = {
     method: "GET",
     headers: {
         "accept": "application/json",
-    }
+    },
+    mode: "cors",
+    credentials: "omit"
 }
 
 // Functions

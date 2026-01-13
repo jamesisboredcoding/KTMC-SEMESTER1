@@ -260,7 +260,7 @@ export async function query_content(type, id, s, ep, useHls = true) {
                 }
 
                 const episode_endpoint = (type == "tv") ? `/${s}/${ep}` : ""
-                const response = await fetch(`https://filmflix-proxy-fix.vercel.app/src/${useHls ? "hls/" : ""}${type}/${id}${episode_endpoint}?ui=${config.SRC_TOKEN}`, { method: "GET", headers: {"Content-Type": "application/json"}})
+                const response = await fetch(`https://filmflix-proxy-fix.vercel.app/src/${useHls ? "hls/" : ""}${type}/${id}${episode_endpoint}`, { method: "GET", headers: {"Content-Type": "application/json"}})
 
                 const data = await response.json()
                 if (data && (data.sources ?? data.hls)) {
