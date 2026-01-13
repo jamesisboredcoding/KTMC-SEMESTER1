@@ -301,7 +301,10 @@ export async function query_content(type, id, s, ep, useHls = true) {
             }
         } else if (result.hls) {
             if (Hls.isSupported()) {
-                hls = new Hls()
+                hls = new Hls({
+                    maxBufferHole: 2,
+                    maxFragLookUpTolerance: 0.5
+                })
                 hls.loadSource(result.hls)
             } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
                 hls = true
