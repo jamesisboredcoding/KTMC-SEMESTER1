@@ -21,6 +21,11 @@ function create_notification(type, text) {
                 if (obj.element == cloned) {
                     clearTimeout(obj.tm)
                     cloned.remove()
+
+                    timeouts.forEach((value, index) => {
+                    if (value.element != cloned) return
+                        timeouts.splice(index, 1)
+                    })
                     update_container()
                 }
             })
@@ -31,6 +36,11 @@ function create_notification(type, text) {
             tm: setTimeout(() => {
                 cloned.classList.add("hide-notif")
                 cloned.remove()
+
+                timeouts.forEach((value, index) => {
+                    if (value.element != cloned) return
+                    timeouts.splice(index, 1)
+                })
                 update_container()
             }, 4000)
         })
