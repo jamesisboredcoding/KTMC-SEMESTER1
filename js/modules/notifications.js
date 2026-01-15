@@ -6,7 +6,7 @@ function update_container() {
     notifications.classList.toggle("hidden", (timeouts.length == 0))
 }
 
-function create_notification(type, text) {
+function create_notification(type, text, d) {
     const template = document.querySelector(".notifications ." + type)
     if (template) {
         const cloned = template.cloneNode(true)
@@ -42,7 +42,7 @@ function create_notification(type, text) {
                     timeouts.splice(index, 1)
                 })
                 update_container()
-            }, 4000)
+            }, (d * 1000))
         })
         update_container()
     } else {
@@ -50,6 +50,6 @@ function create_notification(type, text) {
     }
 }
 
-export default function Notify(type, text) {
-    create_notification(type, text)
+export default function Notify(type, text, duration = 3) {
+    create_notification(type, text, duration)
 }

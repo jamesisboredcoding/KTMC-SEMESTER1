@@ -230,7 +230,7 @@ function create_cc_button(lan, url) {
     captions_container.appendChild(new_cc_button)
 }
 
-export async function query_content(type, id, s, ep, useHls = true) {
+export async function query_content(type, id, s, ep, useHls = true, __reload = 0) {
     clean_player()
     const latest_show_watch = (type == "tv" && !s && !ep) ? get_latest_season_episode_watched(id) ?? {}: {}
 
@@ -262,6 +262,10 @@ export async function query_content(type, id, s, ep, useHls = true) {
                 const episode_endpoint = (type == "tv") ? `/${s}/${ep}` : ""
                 const response = await fetch(`https://filmflix-proxy-fix.vercel.app/src/${useHls ? "hls/" : ""}${type}/${id}${episode_endpoint}`, { method: "GET", headers: {"Content-Type": "application/json"}})
 
+                if (!response.ok) {
+                    throw new Error(response.error)
+                }
+
                 const data = await response.json()
                 if (data && (data.sources ?? data.hls)) {
                     preloaded[id + `${(type == "tv") ? `-${s}-${ep}` : ""}`] = data
@@ -269,8 +273,19 @@ export async function query_content(type, id, s, ep, useHls = true) {
                     break
                 }
             } catch (err) {
+                if (__reload == 3) {
+                    Notify("warning", "Content has no sources.", 30)
+                    return
+                }
+
                 console.error(err)
-                Notify("error", "Failed to load sources")
+                Notify("error", `Failed to load sources${useHls ? ", retrying with non-HLS" : ""}`)
+                
+                if (useHls) {
+                    __reload++
+                    query_content(type, id, s, ep, false, __reload)
+                    return
+                }
             }
         }
     }
@@ -313,8 +328,16 @@ export async function query_content(type, id, s, ep, useHls = true) {
         }
 
         if (current_src == "" && !hls) {
+            if (__reload == 3) {
+                Notify("warning", "Content has no sources.")
+                return
+            }
+
+            delete preloaded[id + `${(type == "tv") ? `-${s}-${ep}` : ""}`]
             Notify("info", "Reloading using original source")
-            query_content(type, id, s, ep, false)
+
+            __reload++
+            query_content(type, id, s, ep, false, __reload)
             return
         }
 
