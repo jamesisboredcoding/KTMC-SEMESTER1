@@ -54,7 +54,7 @@
         @apply opacity-0 pointer-events-none transition-opacity;
     }
 
-    .selected-caption {
+    .selected-caption, .selected-src {
         @apply bg-accent;
     }
 

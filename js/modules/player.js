@@ -6,8 +6,9 @@ import Notify from "./notifications.js";
 const player = document.querySelector(".player")
 const info = player.querySelector(".info")
 const loading_label = info.querySelector(".label")
-const video = document.querySelector("video")
+const video = document.querySelector("#video-player")
 const player_controls = player.querySelector(".controls")
+const embed_frame = player.querySelector("iframe")
 
 const fs = player_controls.querySelector("#fullscreen").querySelector(".fa-solid")
 const play = player_controls.querySelector("#play").querySelector(".fa-solid")
@@ -21,12 +22,14 @@ const time_stamp = player.querySelector(".time-stamp")
 
 const captions_list = bottom_controls.querySelector(".caption-list")
 const episodes_list = bottom_controls.querySelector(".episode-list")
+const src_list = bottom_controls.querySelector(".src-list")
 
 const captions_container = captions_list.querySelector(".container-list")
 const episodes_container = episodes_list.querySelector(".container-list")
 
 let preloaded = {}
 let current = null
+let current_metadata = null
 
 let time_update
 let loaded
@@ -105,48 +108,59 @@ export function toggle_pause(force) {
 }
 
 export function clean_player() {
-    const time = video.currentTime
+    let time = video.currentTime
     info.style.display = "none"
     bottom_controls.style.display = "none"
     progress.style.display = "none"
 
-    video.removeEventListener("loadeddata", loaded)
-    video.removeEventListener("timeupdate", time_update)
-    episodes_list.querySelector(".back").removeEventListener("click", back_eps)
+    const update_db = async (t) => {
+        let history = db.data.history || []
+        if (current) {
+            current[0].t = t
+            current[0].lt = new Date().getTime()
 
-    video.pause()
-    video.removeAttribute("src")
-    video.load()
-
-    const caption_buttons = captions_container.querySelectorAll("div:not(#caption-list-item)")
-    for (const caption_button of caption_buttons) {
-        caption_button.remove()
-    }
-
-    const ep_buttons = episodes_container.querySelectorAll("div:not(#episode-list-item)")
-    for (const ep_button of ep_buttons) {
-        ep_button.remove()
-    }
-
-    let history = db.data.history || []
-    if (current) {
-        current[0].t = time
-        current[0].lt = new Date().getTime()
-
-        if (current[1]) {
-            const index = history.findIndex(iterate => {
-                const idMatch = (iterate.id == current[0].id)
-                const isTv = (current[0].type == "tv")
-                const epMatch = (current[0].s == iterate.s) && (current[0].ep == iterate.ep)
-                return idMatch && (isTv ? (epMatch) : true)
-            })
-            history[index] = current[0]
-        } else {
-            history.push(current[0])
+            if (current[1]) {
+                const index = history.findIndex(iterate => {
+                    const idMatch = (iterate.id == current[0].id)
+                    const isTv = (current[0].type == "tv")
+                    const epMatch = (current[0].s == iterate.s) && (current[0].ep == iterate.ep)
+                    return idMatch && (isTv ? (epMatch) : true)
+                })
+                history[index] = current[0]
+            } else {
+                history.push(current[0])
+            }
         }
+        db.push({ ...db.data, history: history })
     }
+    
+    update_db(time)
+    if (!video.classList.contains("hidden")) {
+        video.removeEventListener("loadeddata", loaded)
+        video.removeEventListener("timeupdate", time_update)
+        episodes_list.querySelector(".back").removeEventListener("click", back_eps)
 
-    db.push({ ...db.data, history: history })
+        video.pause()
+        video.removeAttribute("src")
+        video.load()
+
+        const caption_buttons = captions_container.querySelectorAll("div:not(#caption-list-item)")
+        for (const caption_button of caption_buttons) {
+            caption_button.remove()
+        }
+
+        const ep_buttons = episodes_container.querySelectorAll("div:not(#episode-list-item)")
+        for (const ep_button of ep_buttons) {
+            ep_button.remove()
+        }
+    } else {
+        window.addEventListener("message", ({data}) => {
+            if (data.type === "PLAYER_EVENT" && data.data.event === "playerstatus") {
+                update_db(t)
+            }
+        }, { once: true })
+        embed_frame.contentWindow.postMessage({ command: "getStatus" }, "*")
+    }
     current = null
 }
 
@@ -237,9 +251,10 @@ function create_cc_button(lan, url) {
 }
 
 export async function query_content(type, id, s, ep, useHls = true, __reload = 0) {
+    current_metadata = [type, id, s, ep, useHls, __reload]
     clean_player()
-    const latest_show_watch = (type == "tv" && !s && !ep) ? get_latest_season_episode_watched(id) ?? {}: {}
 
+    const latest_show_watch = (type == "tv" && !s && !ep) ? get_latest_season_episode_watched(id) ?? {}: {}
     if (latest_show_watch.s && latest_show_watch.ep) {
         s = latest_show_watch.s
         ep = latest_show_watch.ep
@@ -254,13 +269,28 @@ export async function query_content(type, id, s, ep, useHls = true, __reload = 0
     video.setAttribute("src", "")
     loading_label.textContent = "Kraunami turinio šaltiniai..."
 
+    for (const selection of src_list.querySelectorAll(".src-sel")) {
+        const selection_id = selection.id
+
+        const isHls = selection_id == "hls" && useHls
+        const isOriginal = selection_id == "og" && !useHls
+
+        selection.classList.toggle("selected-src", isHls || isOriginal)
+    }
+
     info.style.display = ""
     progress.style.display = "none"
 
+    current = video_data
     let result = preloaded[id + `${(type == "tv") ? `-${s}-${ep}` : ""}`]
-    if (!result) {
+    
+    if (!result && !(useHls == null)) {
         for (let i = 0; i < 1; i++) {
             try {
+                video.classList.remove("hidden")
+                bottom_controls.classList.remove("hidden")
+                embed_frame.classList.add("hidden")
+
                 if (i != 0) {
                     loading_label.textContent = "Kraunami turinio šaltiniai... " + `(${i + 1} bandymas)`
                 }
@@ -280,7 +310,8 @@ export async function query_content(type, id, s, ep, useHls = true, __reload = 0
                 }
             } catch (err) {
                 if (__reload == 3) {
-                    Notify("warning", "Content has no sources.", 30)
+                    Notify("warning", "Content has no sources. Falling back to embed.", 30)
+                    query_content(type, id, s, ep, null)
                     return
                 }
 
@@ -294,15 +325,26 @@ export async function query_content(type, id, s, ep, useHls = true, __reload = 0
                 }
             }
         }
+    } else if (useHls == undefined) {
+        Notify("info", "Using VidFast embed player")
+
+        const episode_endpoint = (type == "tv") ? `/${s}/${ep}` : ""
+        video.classList.add("hidden")
+        bottom_controls.classList.add("hidden")
+
+        embed_frame.classList.remove("hidden")
+        embed_frame.setAttribute("src", `https://vidfast.pro/${type}/${id}${episode_endpoint}?autoPlay=true`)
+
+        info.style.display = "none"
+        return
     }
 
     if (result) {
-        const block_default_qualities = ["ORG", "4K"]
+        const block_default_qualities = ["ORG"]
 
         let hls = null
         let current_src = ""
 
-        current = video_data
         if (result.sources) {
             for (const source_data of result.sources) {
                 if (source_data.quality == db.data.settings.quality) {
@@ -335,7 +377,8 @@ export async function query_content(type, id, s, ep, useHls = true, __reload = 0
 
         if (current_src == "" && !hls) {
             if (__reload == 3) {
-                Notify("warning", "Content has no sources.")
+                Notify("warning", "Content has no sources. Falling back to embed.")
+                query_content(type, id, s, ep, null)
                 return
             }
 
@@ -452,8 +495,8 @@ export async function query_content(type, id, s, ep, useHls = true, __reload = 0
 
         video.addEventListener("loadeddata", loaded, { once: true })
         video.addEventListener("timeupdate", time_update)
-        player_controls.querySelector("#next").addEventListener("click", next_listen, { once: true })
 
+        player_controls.querySelector("#next").addEventListener("click", next_listen, { once: true })
         player_controls.querySelector(".volume-slider input").value = db.data.settings.volume
 
         loading_label.textContent = "Kraunamas vaizdas..."
@@ -467,4 +510,18 @@ export async function query_content(type, id, s, ep, useHls = true, __reload = 0
             video.setAttribute("src", current_src)
         }
     }
+}
+
+for (const selection of src_list.querySelectorAll(".src-sel")) {
+    selection.addEventListener("click", () => {
+        if (current_metadata) {
+            for (const old_selection of src_list.querySelectorAll(".src-sel")) {
+                old_selection.classList.remove("selected-src")
+            }
+
+            selection.classList.add("selected-src")
+            current_metadata[4] = (selection.id == "hls" ? true : (selection.id == "og" ? false : null))
+            query_content(...current_metadata)
+        }
+    })
 }

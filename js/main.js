@@ -397,6 +397,10 @@ player_controls.querySelector("#sub").addEventListener("click", () => {
     player_controls.querySelector(".caption-list").classList.toggle("hidden")
 })
 
+player_controls.querySelector("#src").addEventListener("click", () => {
+    player_controls.querySelector(".src-list").classList.toggle("hidden")
+})
+
 player_controls.querySelector("#episodes").addEventListener("click", () => {
     player_controls.querySelector(".episode-list").classList.toggle("hidden")
 })
