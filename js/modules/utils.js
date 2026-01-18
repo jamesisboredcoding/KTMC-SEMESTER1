@@ -12,7 +12,7 @@ export const IMAGE_URL = "https://image.tmdb.org/t/p/"
 export const db = new Database({
     listed: [],
     history: [
-        // { type: "movie", id: 98465654, s: 1, ep: 2, t: 500 },
+        // { type: "movie", id: 98465654, s: 1, ep: 2, t: 500, d: 200, lt: 0 },
     ],
     settings: {
         lan: null,

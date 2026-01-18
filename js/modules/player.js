@@ -86,7 +86,9 @@ export function toggle_fullscreen() {
     if (!fullscreened) {
         player.requestFullscreen()
     } else {
-        document.exitFullscreen()
+        if (document.fullscreenEnabled) {
+            document.exitFullscreen()
+        }
     }
 }
 
@@ -129,6 +131,8 @@ export function clean_player() {
     let history = db.data.history || []
     if (current) {
         current[0].t = time
+        current[0].lt = new Date().getTime()
+
         if (current[1]) {
             const index = history.findIndex(iterate => {
                 const idMatch = (iterate.id == current[0].id)
@@ -178,6 +182,7 @@ function fetch_data(id, s, ep, mtype) {
             id: id,
             t: 0,
             d: 0,
+            lt: 0,
         }
 
         if (mtype == "tv") {
@@ -211,6 +216,7 @@ function create_cc_button(lan, url) {
 
     new_cc_button.classList.remove("hidden")
     new_cc_button.textContent = lan || "No Subtitles"
+
     if (url) new_cc_button.setAttribute("data-url", url)
     new_cc_button.classList.toggle("selected-caption", (db.data.settings.lan == lan))
 

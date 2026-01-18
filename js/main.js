@@ -1,4 +1,3 @@
-import Notify from "./modules/notifications.js"
 import { fetch_content, IMAGE_URL, show_modal, set_content_listed, db } from "./modules/utils.js"
 import { Section, Sections } from "./modules/category_section.js"
 import { Poster, Contents } from "./modules/content.js"
@@ -109,15 +108,22 @@ function load_page(page = "home") {
             history.render(category_sections)
 
             let ids_shown = []
-            for (const content_data of db.data.history) {
-                fetch_content("content", (content_data.type == "movie"), content_data.id)
-                    .then(response => {
+            const sorted_history = db.data.history.sort((a, b) => b.lt || 0 - a.lt || 0)
+
+            const render_posters = async() => {
+                for (const content_data of sorted_history) {
+                    try {
+                        const response = await fetch_content("content", content_data.type === "movie", content_data.id)
                         if (!ids_shown.find(id => content_data.id == id)) {
                             ids_shown.push(content_data.id)
                             history.populate([{ ...response, meta: { t: content_data.t, d: content_data.d } }])
                         }
-                    })
+                    } catch (err) {
+                        console.error(err)
+                    }
+                }
             }
+            render_posters()
         }
 
         // Trending
@@ -295,15 +301,16 @@ search_modal.querySelector("input").addEventListener("keydown", (e) => {
         search_page = p ?? 1
         fetch_content("query", e.target.value, p)
             .then(response => {
+                search_list.querySelector(".empty").classList.toggle("hidden", (response.results.length > 0))
                 for (const item of response.results) {
                     if (search_loaded.includes(item.id)) continue;
 
                     const info = sanitize_item(item)
-                    const content = new Poster(info.title, info.year, info.type, info.rating,
-                        {
-                            banner: info.backdrop,
-                            poster: info.poster
-                        }, info.overview, info.id)
+                    const content = new Poster(info.title, info.year, info.type, info.rating, {
+                        banner: info.backdrop,
+                        poster: info.poster
+                    }, info.overview, info.id)
+
                     content.render(search_list)
                     content.makeAutosize(true)
 
@@ -382,7 +389,7 @@ player.querySelector(".exit").addEventListener("click", () => {
     clean_player()
     load_page()
 
-    document.exitFullscreen()
+    if (document.fullscreenEnabled) document.exitFullscreen()
     window.location.reload()
 })
 
