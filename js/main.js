@@ -16,7 +16,7 @@ fetch("https://ktmcsemester-1-proxy.vercel.app/chat", {
     },
     body: JSON.stringify({
         model: "gpt-oss:120b-cloud",
-        messages: [{ role: "user", content: "find the seahorse emoji" }],
+        messages: [{ role: "user", content: "write a presentation about lemon" }],
         stream: true,
         think: "medium"
     })
@@ -60,6 +60,7 @@ fetch("https://ktmcsemester-1-proxy.vercel.app/chat", {
                             document.querySelector("[data-role='assistant'] .thinking").classList.toggle("hidden", true)
                             smd.parser_write(parser, data.message.content)
                         }
+                        document.querySelector(".messages").scrollTo({ top: 10000, behavior: "smooth" })
                     } catch (err) {
                         // ignore
                     }
