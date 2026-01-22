@@ -1,12 +1,7 @@
 import * as smd from "./modules/smd.js"
+import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js"
 
 const KEY = "8702503f89e34602ba8db67dc7c2ff18.THFscoQuyJ_3arIxHaV5uznR"
-
-const renderer = smd.default_renderer(document.querySelector("[data-role='assistant'] .content"))
-const parser = smd.parser(renderer)
-
-const think_renderer = smd.default_renderer(document.querySelector("[data-role='assistant'] .thinking"))
-const think_parser = smd.parser(think_renderer)
 
 fetch("https://ktmcsemester-1-proxy.vercel.app/chat", {
     method: "POST",
@@ -26,6 +21,9 @@ fetch("https://ktmcsemester-1-proxy.vercel.app/chat", {
 
     let buffer = ""
     let think_time = null
+
+    let thinking_content = ""
+    let message_content = ""
 
     try {
         while (true) {
@@ -49,7 +47,8 @@ fetch("https://ktmcsemester-1-proxy.vercel.app/chat", {
                                 console.log(think_time)
                             }
                             document.querySelector("[data-role='assistant'] .thinking").classList.toggle("hidden", false)
-                            smd.parser_write(think_parser, data.message.thinking)
+                            thinking_content = thinking_content + data.message.thinking
+                            document.querySelector("[data-role='assistant'] .thinking").innerHTML = marked.parse(thinking_content)
                         } else {
                             if (think_time) {
                                 const duration = (new Date().getTime() - think_time) / 1000
@@ -58,7 +57,8 @@ fetch("https://ktmcsemester-1-proxy.vercel.app/chat", {
                                 think_time = null
                             }
                             document.querySelector("[data-role='assistant'] .thinking").classList.toggle("hidden", true)
-                            smd.parser_write(parser, data.message.content)
+                            message_content = message_content + data.message.content
+                            document.querySelector("[data-role='assistant'] .content").innerHTML = marked.parse(message_content)
                         }
                         document.querySelector(".messages").scrollTo({ top: 10000, behavior: "smooth" })
                     } catch (err) {
