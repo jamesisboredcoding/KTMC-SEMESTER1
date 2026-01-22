@@ -3,249 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./dist/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    <link rel="shortcut icon" href="./dist/img/icon.png" type="image/x-icon">
-    <title>Filmflix</title>
+    <title>Document</title>
 </head>
 <body>
-    <!-- Header h-30 -->
-    <header class="header md:h-15 border-b border-b-primary/20 flex items-center flex-col md:flex-row fixed w-screen">
-        <h1 class="title text-2xl text-primary font-semibold font-display before:h-15 before:w-10 grow relative my-4 md:mt-3 ml-15">Filmflix</h1>
-        <div class="navbar h-full w-full flex flex-col justify-center shrink">
-            <div class="buttons h-full flex flex-row justify-center w-full">
-                <button id="home" class="nav-item home selected">Pagrindinis</button>
-                <button id="movies" class="nav-item movie">Filmai</button>
-                <button id="shows" class="nav-item tv">Serialai</button>
-                <button id="list" class="nav-item wlist">Mano Sarašas</button>
-                <button class="nav-item search">Ieškoti</button>
-            </div>
-        </div>
-    </header>
+    <main class="flex h-screen">
+        <!-- Sidebar -->
+        <section class="sidebar h-full relative extended pt-2 flex flex-col select-none">
+            <!-- Topbar -->
+            <h1 class="text-zinc-50 font-serif text-2xl font-medium mb-4 px-4">Claude</h1>
+            <button class="sidebar-button sidebar-opt text-zinc-500 aspect-square text-lg w-8 h-8 absolute">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
 
-    <!-- Primary Content -->
-    <main class="absolute w-full -z-1 flex flex-col">
-        <!-- Hero banner -->
-        <section class="hero backdrop relative w-full h-180 aspect-video bg-cover bg-center">
-            <div class="grad-dark absolute w-full h-full"></div>
-            <div class="blurrer backdrop-blur-sm translate-y-1/2 w-full h-20 absolute bottom-0"></div>
-            <div class="hero-info absolute bottom-20 left-10 md:left-20">
-                <h1 class="text-primary font-black text-6xl text-shadow-lg/40 pr-10 md:w-1/2 title">Stranger Things</h1>
-                <div class="info-content flex row gap-5 my-5">
-                    <p class="stars text-amber-300 font-bold rating">6.7</p>
-                    <p class="text-primary year">2025</p>
-                    <p class="movie text-primary type">Movie</p>
-                </div>
-                <p class="desc text-primary pr-10 md:w-1/2 text-shadow-lg overview">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit accusamus id aspernatur distinctio facere minima similique ab numquam ad quae maiores cumque, incidunt amet recusandae.</p>
-                <div class="buttons mt-5">
-                    <button class="play-button">Žiūrėti</button>
-                    <button class="info-button">Daugiau Info</button>
-                </div>
-            </div>
-        </section>
+            <!-- Buttons -->
+            <ul class="buttons px-2">
+                <li class="w-full h-8 text-md font-sans">
+                    <a id="new-chat" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">New Chat</a>
+                </li>
+                <li class="w-full h-8 text-md font-sans">
+                    <a id="chats" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Chats</a>
+                </li>
+            </ul>
 
-        <!-- Sections -->
-        <section class="category-sections w-full py-8 px-12">
-            <template id="category-section">
-                <article class="w-full">
-                    <h1 class="text-primary font-bold text-3xl mb-8 section-title">Continue Watching</h1>
-                    <div class="relative flex">
-                        <button class="move-left -left-4 absolute z-100 h-full w-15 text-5xl bg-surface/20 text-primary cursor-pointer hover:bg-surface/60 hover:transition-colors transition-colors">&lt;</button>
-                        <button class="move-right -right-4 absolute z-100 h-full w-15 text-5xl bg-surface/20 text-primary cursor-pointer hover:bg-surface/60 hover:transition-colors transition-colors">&gt;</button>
-                        <div class="list flex row gap-4 relative overflow-hidden p-4 scale-x-102">
-                            <!-- movie/show content -->
-                        </div>
+            <!-- Chats -->
+            <ul class="chats w-full grow mt-4">
+                <p class="pholder text-zinc-400/70 text-center text-sm mt-10">Your chats will show up here</p>
+            </ul>
+
+            <!-- Profile Bar -->
+            <div class="profile relative w-full h-16 border-t border-t-zinc-700 p-3.5 flex flex-row items-center">
+                <h2 class="icon text-zinc-900 text-center font-serif font-medium w-9 text-xl/9 bg-zinc-300 rounded-full aspect-square">J</h2>
+                <div class="info flex flex-col mx-3">
+                    <p class="text-zinc-300 text-sm">Guest</p>
+                    <p class="text-zinc-400 text-xs">Free Plan</p>
+                </div>
+
+                <!-- Popup -->
+                <div class="popup absolute left-0 bottom-18 w-full px-2">
+                    <div class="container bg-zinc-800 w-full h-full rounded-xl border border-zinc-500 p-2">
+                        <p class="text-zinc-500 text-sm px-1">example@gmail.com</p>
+                        <ul class="buttons mt-3">
+                            <li class="w-full h-8 text-md font-sans">
+                                <a id="settings" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Settings</a>
+                            </li>
+                            <li class="w-full h-8 text-md font-sans">
+                                <a id="plan" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Upgrade Plan</a>
+                            </li>
+                            <li class="w-full h-8 text-md font-sans">
+                                <a id="info" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="https://github.com/jamesisboredcoding/KTMC-SEMESTER1">Github Repo</a>
+                            </li>
+                            <hr class="text-zinc-500/50 my-2">
+                            <li class="w-full h-8 text-md font-sans">
+                                <a id="logout" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Log Out</a>
+                            </li>
+                        </ul>
                     </div>
-                </article>
-                <hr>
-            </template>
-        </section>
-
-        <!-- Content Templates -->
-        <!-- Poster template -->
-        <div id="poster-content"
-            class="poster-item item aspect-2/3 group hover:scale-105 cursor-pointer transition-transform relative"
-            style="display: none;">
-            <img class="rounded-lg h-full w-full absolute img" src="" alt="">
-            <div
-                class="info absolute z-10 bottom-5 left-5 opacity-0 group-hover:opacity-100 group-hover:transition-opacity transition-opacity">
-                <h1 class="text-primary font-bold text-2xl text-shadow-lg/50 pr-5 title">Zootopia 3</h1>
-                <div class="flex row gap-3">
-                    <p class="stars text-amber-300 font-bold text-shadow-lg/50 rating">6.7</p>
-                    <p class="text-primary text-shadow-lg/50 year">2025</p>
                 </div>
-            </div>
-            <div class="progress bg-surface/70 w-full rounded-b-lg h-2 absolute bottom-0">
-                <div class="slider h-full bg-accent rounded-b-lg"></div>
-            </div>
-        </div>
-        
-        <!-- Banner template -->
-        <div id="banner-content"
-            class="item banner aspect-video w-106 h-60 group hover:scale-105 cursor-pointer transition-all relative"
-            style="display: none;">
-            <img class="rounded-lg h-full w-full absolute img" src="" alt="">
-            <div
-                class="info absolute z-10 bottom-5 left-5 opacity-0 group-hover:opacity-100 group-hover:transition-opacity transition-opacity">
-                <h1 class="text-primary font-bold text-2xl pr-5 text-shadow-lg/50 title">Zootopia 3</h1>
-                <div class="flex row gap-3">
-                    <p class="stars text-amber-300 font-bold text-shadow-lg/50 rating">6.7</p>
-                    <p class="text-primary text-shadow-lg/50 year">2025</p>
-                </div>
-            </div>
-            <div class="progress bg-surface/70 w-full rounded-b-lg h-2 absolute bottom-0">
-                <div class="slider h-full bg-accent rounded-b-lg"></div>
-            </div>
-        </div>
-
-        <!-- Watch List -->
-        <section class="watch-list h-[calc(100%-10rem)] w-full flex row flex-wrap gap-4 pl-6 pt-4 mt-15 md:mt-0 overflow-scroll" style="display: none;">
-            <div class="empty grow pr-6">
-                <h1 class="text-primary font-bold text-5xl text-center mt-20">Čia nieko nėra...</h1>
-                <p class="text-secondary font-semibold text-center my-4">Įtraukite filmus ir serialus į savo žiūrimųjų sąrašą ir jie bus rodomi čia!</p>
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer class="w-full h-20 bg-secondary/10 flex justify-center items-center gap-5 px-4">
-            <h1 class="text-white">Filmflix &copy; 2026</h1>
-        </footer>
+        <!-- Main Window -->
+        <section class="main-window grow relative h-full border-l inited border-l-zinc-700 flex justify-center">
+            <div class="messages absolute pt-10 w-full px-[17%] top-0 overflow-scroll h-11/12 pb-20">
+                <div data-role="user" class="message">
+                    <p>write in markdown</p>
+                </div>
+                <div data-role="assistant" class="message">
+                    <div class="thinking text-zinc-500"></div>
+                    <div class="content">
+                        <i class="text-zinc-400/50 mb-5 think-status hidden">Thought for 3 seconds</i>
+                    </div>
+                </div>
+            </div>
+            <div class="message-container w-2/3">
+                <h1 class="text-zinc-50 text-center text-3xl select-none greeting font-serif">How can I help you today?</h1>
+                <div class="message-box w-full bg-zinc-800 rounded-3xl px-4 py-2 mt-10">
+                    <textarea class="text-zinc-50 resize-none py-3 h-3 min-h-6 max-h-50 px-1 w-full" style="height: 1.5rem;" placeholder="Ask anything"></textarea>
+                    <div class="buttons w-full mt-2 h-10 bg-amber-300/0">
+                        <ul class="flex flex-row gap-1">
+                            <li><button id="attach" class="inline-block w-8 text-zinc-500 rounded-lg aspect-square"><i class="fa-solid fa-plus"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-zinc-950 text-zinc-50 text-xs rounded-lg py-1 w-20">Attach files</span>
+                            </button></li>
+                            <li><button id="think" class="can-select inline-block w-8 rounded-lg aspect-square selected"><i class="fa-solid fa-repeat"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-zinc-950 text-zinc-50 text-xs rounded-lg py-1 w-20">Thinking</span>
+                            </button></li>
+                            <div class="seperator grow"></div>
+                            <button id="send" class="inline-block w-8 rounded-lg aspect-square bg-blue-500 text-zinc-50 disabled:opacity-40"><i class="fa-solid fa-arrow-up"></i></button>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Global elements -->
+    <!-- Quick JS -->
+    <script>
+        const txt = document.querySelector(".message-box textarea")
+        function autogrow() {
+            txt.style.height = '0px'; txt.style.height = txt.scrollHeight + 'px'
+        }
+        txt.addEventListener("input", autogrow)
+        autogrow(txt)
+    </script>
 
-    <!-- Movie Player -->
-    <div class="player w-screen h-screen fixed z-100 bg-black">
-        <div class="info h-full w-full flex justify-center bg-bgtxt items-center flex-col">
-            <h1 class="text-primary text-5xl font-bold text-center label">Loading...</h1>
-            <p class="text-secondary text-center text-xl my-5">Tai gali truputi užtrukti.</p>
-            <img class="loading invert-100 aspect-square h-10" src="./dist/img/load.png" alt="">
-        </div>
-        <div class="controls w-full faded">
-            <div class="topbar w-full h-20 absolute top-0 z-10 flex items-center">
-                <button class="exit ml-4 text-2xl cursor-pointer text-primary block w-12 aspect-square bg-secondary/50 rounded-full hover:bg-secondary/20"><i class="fa-solid fa-angle-left"></i></button>
-            </div>
-            <div class="progress w-full h-5 absolute z-10 bottom-25 px-7 flex items-center">
-                <div class="slider bg-secondary w-full h-2 rounded-lg flex items-center cursor-pointer">
-                    <div class="bar relative rounded-lg h-full bg-accent">
-                        <div class="bg-accent aspect-square w-6 rounded-full absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2"></div>
-                    </div>
-                </div>
-                <p class="text-primary font-semibold inline-block ml-5 time-stamp">00:00:00</p>
-            </div>
-            <div class="bottombar w-full h-25 absolute z-10 bottom-0 flex flex-row items-center gap-1 md:gap-8 px-5">
-                <button id="play" class="text-3xl md:text-5xl cursor-pointer text-primary"><i class="fa-solid fa-pause"></i></button>
-                <button id="backward" class="text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-rotate-left"></i></button>
-                <button id="forward" class="text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-rotate-right"></i></button>
-                <button id="volume" class="text-3xl md:text-4xl cursor-pointer text-primary relative"><i class="fa-solid fa-volume-high"></i>
-                    <div class="volume-slider py-4 absolute top-0 h-50 w-full -translate-y-full bg-secondary/10 rounded-lg hidden">
-                        <input class="vertical h-full" orient="vertical" max="100" min="0" type="range">
-                    </div>
-                </button>
-                <div class="data grow shrink justify-center items-center bottom-0 gap-3 flex">
-                    <span class="text-primary font-bold text-[0px] md:text-xl text-center md:text-left text-shadow-lg/30 name"></span>
-                    <span class="text-primary/35 font-medium text-[0px] md:text-lg text-shadow-lg/30 episode"></span>
-                    <span class="text-primary/35 font-medium text-[0px] md:text-lg text-shadow-lg/30 title"></span>
-                </div>
-                <button id="next" class="text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-forward-step"></i></button>
-                <button id="episodes" class="relative text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-layer-group"></i>
-                    <div class="episode-list cursor-auto absolute top-0 -right-20 md:right-0 -translate-y-full bg-surface rounded-lg w-80 md:w-120 h-80 flex flex-col items-start overflow-scroll hidden">
-                        <div class="back cursor-pointer text-primary m-2"><i class="fa-solid fa-angle-left"></i></div>
-                        <div class="w-full grow py-4 container-list flex flex-col">
-                            <div id="episode-list-item" class="hidden text-left text-2xl font-semibold bg-secondary/30 hover:bg-secondary hover:cursor-pointer min-h-15 w-full flex justify-start pl-3 align-middle pt-3">Episode 5</div>
-                        </div>
-                    </div>
-                </button>
-                <button id="sub" class="relative text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-closed-captioning"></i>
-                    <div class="caption-list cursor-auto absolute top-0 right-0 -translate-y-full bg-surface rounded-lg w-80 h-80 flex flex-col items-start overflow-scroll hidden">
-                        <div class="w-full grow py-4 container-list flex flex-col">
-                            <div id="caption-list-item" class="hidden text-left text-2xl font-semibold bg-secondary/30 not-[.selected-caption]:hover:bg-secondary hover:cursor-pointer h-15 w-full flex justify-start pl-5 pt-3 align-middle">English</div>
-                        </div>
-                    </div>
-                </button>
-                <button id="src" class="relative text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-cloud"></i>
-                    <div class="src-list cursor-auto absolute top-0 right-0 -translate-y-full bg-surface rounded-lg w-80 h-80 flex flex-col items-start overflow-scroll hidden">
-                        <div class="w-full grow py-4 container-list flex flex-col">
-                            <div id="hls" class="src-sel text-left text-2xl font-semibold bg-secondary/30 not-[.selected-src]:hover:bg-secondary hover:cursor-pointer h-15 w-full flex justify-start pl-5 pt-3 align-middle">HLS</div>
-                            <div id="og" class="src-sel text-left text-2xl font-semibold bg-secondary/30 not-[.selected-src]:hover:bg-secondary hover:cursor-pointer h-15 w-full flex justify-start pl-5 pt-3 align-middle">Original</div>
-                            <div id="embed" class="src-sel text-left text-2xl font-semibold bg-secondary/30 not-[.selected-src]:hover:bg-secondary hover:cursor-pointer h-15 w-full flex justify-start pl-5 pt-3 align-middle">Embed (ads)</div>
-                        </div>
-                    </div>
-                </button>
-                <button id="fullscreen" class="text-3xl md:text-4xl cursor-pointer text-primary"><i class="fa-solid fa-expand"></i></button>
-            </div>
-        </div>
-        <video id="video-player" class="w-full h-full pointer-events-none aspect-video" crossorigin="anonymous" oncontextmenu="return false" src="">
-            <track kind="captions" srclang="en" label="English" default></track>
-        </video>
-        <iframe class="w-full h-full hidden absolute top-0 z-90" src="" frameborder="0" allowfullscreen allow="encrypted-media"></iframe>
-    </div>
-
-    <!-- Search Container -->
-    <div class="search-container z-100 flex fixed h-screen w-screen justify-center items-center transition-transform p-8">
-        <div class="modal bg-black/60 backdrop-blur-xl h-full w-full rounded-lg relative overflow-hidden">
-            <input class="text-primary border-b border-b-primary/30 hover:border-b-primary focus:border-b-primary focus:outline-0 m-8 text-2xl" type="search" placeholder="Ieškoti...">
-            <button class="exit cursor-pointer absolute text-primary block w-10 aspect-square bg-secondary/50 rounded-full top-5 right-5 hover:bg-secondary/20"><i class="fa-solid fa-xmark"></i></button>
-            <div class="list w-full h-full px-4 pb-30 pt-5 flex flex-row flex-wrap items-start gap-4 overflow-scroll mx-auto">
-                <div class="empty h-full w-full text-secondary text-center">
-                    <h1 class="font-bold text-4xl">No results found..</h1>
-                    <i class="fa-solid fa-question text-6xl pt-4"></i>
-                </div>
-                <!-- content -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="content-modal flex fixed h-screen w-screen justify-center items-end md:items-center transition-transform">
-        <div class="modal bg-surface/95 backdrop-blur-xl w-full md:w-1/2 h-[80vh] rounded-lg relative overflow-y-scroll">
-            <div class="banner relative">
-                <div class="blurrer backdrop-blur-md w-full h-20 absolute bottom-0"></div>
-                <img class="banner aspect-video w-full rounded-t-lg" src="https://image.tmdb.org/t/p/original/8zbAoryWbtH0DKdev8abFAjdufy.jpg" alt="">
-                <div class="grad w-full h-40 absolute bottom-0"></div>
-                <div class="modal-info absolute bottom-0 left-10 pr-10 translate-y-1/2">
-                    <h1 class="text-primary font-black text-4xl text-shadow-lg/40 title">Stranger Things</h1>
-                    <div class="info-content flex row gap-5 my-5">
-                        <p class="stars text-amber-300 font-bold text-shadow-lg/40 rating">6.7</p>
-                        <p class="text-primary text-shadow-lg/40 year">2025</p>
-                        <p class="movie text-primary text-shadow-lg/40 type">Movie</p>
-                    </div>
-                    <p class="desc text-primary w-full text-shadow-lg/40 overview">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit accusamus id aspernatur distinctio facere minima similique ab numquam ad quae maiores cumque, incidunt amet recusandae.</p>
-                    <div class="buttons my-5 flex">
-                        <button class="play-button">Žiūrėti</button>
-                        <button class="wl-button">+</button> <!-- ✔ -->
-                    </div>
-                </div>
-            </div>
-            <button class="exit cursor-pointer absolute text-primary block w-10 aspect-square bg-secondary rounded-full top-5 right-5 hover:bg-secondary/70"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-    </div>
-
-    <!-- Notifications -->
-    <div class="notifications m-4 right-0 top-0 fixed w-90 h-80 flex flex-col z-101 gap-2 hidden">
-        <div class="error bg-error w-full h-15 rounded-lg flex row items-center hide-notif hidden">
-            <i class="fa-solid fa-xmark text-3xl mx-3 text-white"></i>
-            <p class="text-white text-md">Successfully loaded video server!</p>
-            <button class="absolute right-2 h-1/2 aspect-square cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="warning bg-warning w-full h-15 rounded-lg flex row items-center hide-notif hidden">
-            <i class="fa-solid fa-exclamation text-3xl mx-3 text-black"></i>
-            <p class="text-black text-md">Successfully loaded video server!</p>
-            <button class="absolute right-2 h-1/2 aspect-square cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="info bg-info w-full h-15 rounded-lg flex row items-center hide-notif hidden">
-            <i class="fa-solid fa-info text-3xl mx-3 text-black"></i>
-            <p class="text-black text-md">Successfully loaded video server!</p>
-            <button class="absolute right-2 h-1/2 aspect-square cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="success bg-success w-full h-15 rounded-lg flex row items-center hide-notif hidden">
-            <i class="fa-solid fa-check text-3xl mx-3 text-black"></i>
-            <p class="text-black text-md">Successfully loaded video server!</p>
-            <button class="absolute right-2 h-1/2 aspect-square cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- JS -->
     <script type="module" src="./js/main.js"></script>
 </body>
 </html>

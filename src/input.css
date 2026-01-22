@@ -3,257 +3,153 @@
 /* Tailwind themes */
 
 @theme {
-    --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    /* --font-sans: "Lato", serif; */
+    /* --font-sans: "Helvetica", sans-serif; */
+    --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-serif: Georgia, 'Times New Roman', Times, serif;
     --font-fa: "Font Awesome 5 Free";
-
-    --color-bgtxt: #151616;
-    --color-primary: white;
-    --color-secondary: rgba(84, 85, 85, .8);
-    --color-accent: #e50914;
-    --color-surface: #303131;
-
-    --color-success: #4efc41;
-    --color-error: #fc4141;
-    --color-warning: #fcdd41;
-    --color-info: #419ffc;
-}
-
-/* Tailwind utils */
-
-@layer utilities {
-    .movie::before {
-        content: "\e131";
-        @apply font-fa font-black mr-2 text-lg;
-    }
-
-    .home::before {
-        content: "\f015";
-        @apply font-fa font-black mr-2 text-lg;
-    }
-
-    .tv::before {
-        content: "\f630";
-        @apply font-fa font-black mr-2 text-lg;
-    }
-
-    .wlist::before {
-        content: "\f03a";
-        @apply font-fa font-black mr-2 text-lg;
-    }
-
-    .search::before {
-        content: "\f002";
-        @apply font-fa font-black mr-2 text-lg;
-    }
-
-    .abs-bottom {
-        @apply absolute bottom-0;
-    }
-
-    .faded {
-        @apply opacity-0 pointer-events-none transition-opacity;
-    }
-
-    .selected-caption, .selected-src {
-        @apply bg-accent;
-    }
-
-    .inactive {
-        @apply cursor-none;
-    }
 }
 
 @layer components {
     body {
-        @apply bg-bgtxt;
+        @apply bg-zinc-900;
     }
 
-    main {
-        &.off {
-            @apply mt-30 md:mt-15;
-        }
-    }
-
-    .header {
-        &.scrolled {
-            @apply bg-bgtxt/80 backdrop-blur-xl transition-all;
-        }
-        .title::before {
-            content: "";
-            background: url(../img/icon.png);
-            @apply bg-cover bg-center block absolute top-1/2 left-0 -translate-x-full aspect-square -translate-y-1/2;
-        }
-    }
-
-    .nav-item {
-        @apply cursor-pointer mx-3 h-15 md:h-full max-w-35 font-medium font-display text-white text-[0px] md:text-lg shrink grow w-full md:w-auto;
-        &:hover, &.selected {
-            @apply text-accent border-b;
-        }
-    }
-
-    .play-button {
-        @apply bg-primary font-display text-lg font-bold text-bgtxt rounded-lg inline-block h-12 w-32 cursor-pointer transition-transform;
-        &:hover {
-            @apply bg-primary/70 transform scale-110;
+    .sidebar {
+        @apply w-12 transition-transform;
+        &.extended {
+            @apply w-70 transition-transform;
         }
 
-        &::before {
-            content: "\f04b";
-            @apply font-fa font-black text-bgtxt mr-2;
-        }
-    }
+        .buttons a {
+            & {
+                @apply px-10 relative;
+            }
 
-    .wl-button {
-        @apply bg-secondary font-fa text-lg font-black text-primary rounded-lg inline-block h-12 aspect-square cursor-pointer ml-5 transition-transform;
-        &:hover {
-            @apply bg-primary/20 transform scale-110;
-        }
-    }
-
-    .info-button {
-        @apply bg-surface/50 font-display text-lg font-bold text-primary rounded-lg inline-block h-12 w-40 cursor-pointer ml-5 transition-transform;
-        &:hover {
-            @apply bg-primary/20 transform scale-110;
+            &::before {
+                @apply font-fa font-black mx-3 absolute top-0 left-0;
+            }
         }
 
-        &::before {
-            content: "\f05a";
-            @apply font-fa font-black text-primary mr-2;
-        }
-    }
-
-    .stars::before {
-        content: "\f005";
-        @apply font-fa font-bold mr-2;
-    }
-
-    hr {
-        @apply text-surface my-8;
-    }
-
-    .section-title {
-        @apply relative;
-        &::before {
-            content: "";
-            @apply inline-block absolute bg-accent h-10 w-2 rounded-lg -left-5;
-        }
-    }
-
-    .notifications {
-        & > * {
-            @apply transition-transform relative;
-        }
-    }
-
-    .hide-notif {
-        @apply transform translate-x-100 opacity-0 transition-transform;
-    }
-
-    .content-modal {
-        @apply invisible opacity-0 pointer-events-none;
-        & > .modal {
-            @apply translate-y-10 opacity-0 transition-all;
-        }
-
-        &.active-modal {
-            @apply bg-black/70 opacity-100 visible pointer-events-auto backdrop-blur-sm transition-all;
-            & > .modal {
-                @apply translate-y-0 opacity-100 transition-transform;
+        .profile {
+            &:hover {
+                @apply bg-zinc-950/75 cursor-pointer;
             }
         }
     }
 
-    .search-container {
-        @apply invisible opacity-0 pointer-events-none;
-        & > .modal {
-            @apply translate-y-10 opacity-0 transition-all;
+    .sidebar-button {
+        @apply translate-x-1/2 right-6 top-2 cursor-pointer flex items-center justify-center;
+    }
+
+    .sidebar-opt {
+        @apply text-zinc-400 transition-colors;
+        &:hover {
+            @apply bg-zinc-950/50 text-zinc-50 transition-colors;
         }
 
-        &.active-modal {
-            @apply opacity-100 visible pointer-events-auto transition-all;
-            & > .modal {
-                @apply translate-y-0 opacity-100 transition-transform;
-            }
+        &#new-chat::before {
+            content: "\2b";
+        }
+
+        &#chats::before {
+            content: "\f086";
+        }
+
+        &#settings::before {
+            content: "\f013";
+        }
+
+        &#plan::before {
+            content: "\f35b";
+        }
+
+        &#info::before {
+            content: "\f3e5";
+        }
+
+        &#logout::before {
+            content: "\f2f5";
         }
     }
 
-    .player {
-        @apply invisible opacity-0 pointer-events-none scale-75;
-        &.active-modal {
-            @apply opacity-100 visible pointer-events-auto scale-100 transition-all;
+    .main-window {
+        @apply items-center;
+
+        textarea {
+            &::placeholder {
+                @apply text-zinc-600
+            }
+            &:focus {
+                @apply outline-0;
+            }
         }
 
-        .bottombar button:not(.list-item) {
-            @apply flex justify-center items-center shrink aspect-square;
-            & > i {
-                @apply transition-transform;
-                &:hover {
-                    @apply scale-110 transition-transform;
+        /* When initiated */
+        &.inited {
+            @apply items-end pb-5;
+            .message-container {
+                @apply absolute;
+                .greeting { @apply hidden; }
+            }
+        }
+
+        .messages {
+            & > .message {
+                @apply text-zinc-50 flex-col flex mb-4;
+                &[data-role="user"] {
+                    @apply justify-end flex-row;
+                    p {
+                        @apply bg-zinc-800 max-w-1/2 rounded-xl px-3 py-1;
+                    }
+                }
+
+                /* Markdown */
+                &[data-role="assistant"] {
+                    @apply flex flex-col w-full font-serif;
+                    /* & > * { @apply pb-4; } */
+                    &.streaming > *:last-child {
+                        @apply relative block;
+                        &::after {
+                            content: "";
+                            @apply inline-block w-4 bg-zinc-50 rounded-full aspect-square;
+                        }
+                    }
+                    h1 { @apply text-3xl font-bold mb-4 mt-6; }
+                    h2 { @apply text-2xl font-bold mb-3 mt-5; }
+                    h3 { @apply text-xl font-bold mb-2 mt-4; }
+                    h4 { @apply text-lg font-bold mb-2 mt-3; }
+                    h5 { @apply text-sm font-bold mb-1 mt-2; }
+                    h6 { @apply text-xs font-bold mb-1 mt-2; }
+                    p { @apply mb-4 leading-relaxed; }
+                    a { @apply text-blue-400 underline hover:text-blue-300 transition-colors; }
+                    code { @apply bg-zinc-900/75 px-2 py-1 rounded text-sm font-mono; }
+                    pre { @apply bg-zinc-950 p-4 rounded-lg overflow-x-auto mb-4; }
+                    pre code { @apply bg-transparent p-0; }
+                    blockquote { @apply border-l-4 border-zinc-600 pl-4 italic my-4 text-zinc-400; }
+                    ul, ol { @apply pl-6 mb-4 space-y-2; }
+                    ul li { @apply list-disc; }
+                    ol li { @apply list-decimal; }
+                    hr { @apply border-zinc-700 my-6; }
+                    table { @apply w-full border-collapse mb-4; }
+                    th { @apply bg-zinc-800 p-2 text-left font-bold border border-zinc-700; }
+                    td { @apply p-2 border border-zinc-700; }
+                    strong { @apply font-bold; }
+                    em { @apply italic; }
                 }
             }
         }
-    }
 
-    .poster-item {
-        &:not(.grown) {
-            @apply w-55 h-82.5;
+        .buttons button {
+            @apply text-zinc-500 relative transition-all;
+            span { @apply hidden; }
+            &:hover {
+                @apply bg-zinc-900/50 cursor-pointer transition-all;
+                span { @apply block; }
+            }
+            &.selected {
+                @apply bg-blue-500/20 text-blue-400 transition-all;
+            }
         }
-        &.grown {
-            @apply min-w-55 min-h-82.5 grow;
-        }
     }
-}
-
-/* Native CSS */
-
-* {
-    scrollbar-width: none;
-}
-
-.grad {
-    background: #303131;
-    background: linear-gradient(0deg, rgba(48, 49, 49, 1) 0%, rgba(48, 49, 49, 0) 100%);
-    opacity: .8;
-}
-
-.grad-dark {
-    background: rgb(21, 22, 22);
-    background: linear-gradient(0deg, rgb(34, 34, 34) 0%, rgba(48, 49, 49, 0) 100%);
-    opacity: .8;
-}
-
-.blurrer {
-    mask: linear-gradient(black, black, transparent);
-    transform: rotate(180deg);
-}
-
-.backdrop {
-    &::before {
-        content: "";
-        position: absolute;
-        opacity: var(--bg-opacity, 1);
-        background-image: var(--bg-image);
-        background-position: center;
-        background-size: cover;
-        width: 100%;
-        height: 100%;
-        transition: opacity 1s;
-    }
-}
-
-.loading {
-    animation: spin 1s infinite;
-}
-
-video::cue {
-    background-color: transparent;
-    text-shadow: 3px 3px 4px black;
-}
-
-/* Spinning */
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
 }
