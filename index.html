@@ -8,38 +8,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./dist/css/style.css">
-    <link rel="shortcut icon" href="./dist/img/fav.ico" type="image/x-icon">
+    <link rel="icon" href="./dist/img/fav.ico" type="image/x-icon">
     <title>ChatAI</title>
 </head>
 <body>
     <main class="flex h-screen">
         <!-- Sidebar -->
-        <section class="sidebar bg-zinc-900 h-full relative extended pt-2 flex flex-col select-none">
+        <section class="sidebar bg-zinc-900 extended h-full pt-2 flex flex-col select-none z-10 border-r border-r-zinc-700">
             <!-- Topbar -->
             <h1 class="text-zinc-50 font-serif text-2xl font-medium mb-4 px-4">ChatAI</h1>
-            <button class="sidebar-button sidebar-opt text-zinc-500 aspect-square text-lg w-8 h-8 absolute">
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
+            <div class="w-full relative">
+                <button class="sidebar-button sidebar-opt text-zinc-500 aspect-square rounded-lg text-lg w-8 h-8 absolute">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
 
             <!-- Buttons -->
             <ul class="buttons px-2">
                 <li class="w-full h-8 text-md font-sans">
-                    <a id="new-chat" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">New Chat</a>
+                    <button id="new-chat" class="sidebar-opt h-full rounded-lg block" href="#">New Chat</button>
                 </li>
-                <li class="w-full h-8 text-md font-sans">
-                    <a id="chats" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Chats</a>
+                <li class="w-full h-8 text-md font-sans flex">
+                    <button id="upgrade" class="sidebar-opt h-full rounded-lg block" href="#">Upgrade</button>
                 </li>
             </ul>
+            <hr class="text-zinc-600 my-3">
 
             <!-- Chats -->
-            <ul class="chats w-full grow mt-4">
+            <ul class="chats w-full grow px-2 overflow-scroll">
+                <a id="..." class="sidebar-opt h-8 w-full rounded-lg block px-2 text-sm/8 truncate" href="#">Presentation about lemons</a>
                 <p class="pholder text-zinc-400/70 text-center text-sm mt-10">Your chats will show up here</p>
             </ul>
 
             <!-- Profile Bar -->
             <div class="profile relative w-full h-16 border-t border-t-zinc-700 p-3.5 flex flex-row items-center">
                 <h2 class="icon text-zinc-900 text-center font-serif font-medium w-9 text-xl/9 bg-zinc-300 rounded-full aspect-square">J</h2>
-                <div class="info flex flex-col mx-3">
+                <div class="info flex-col mx-3">
                     <p class="text-zinc-300 text-sm">Guest</p>
                     <p class="text-zinc-400 text-xs">Free Plan</p>
                 </div>
@@ -50,17 +54,17 @@
                         <p class="text-zinc-500 text-sm px-1">example@gmail.com</p>
                         <ul class="buttons mt-3">
                             <li class="w-full h-8 text-md font-sans">
-                                <a id="settings" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Settings</a>
+                                <button id="settings" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Settings</button>
                             </li>
                             <li class="w-full h-8 text-md font-sans">
-                                <a id="plan" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Upgrade Plan</a>
+                                <button id="plan" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Upgrade Plan</button>
                             </li>
                             <li class="w-full h-8 text-md font-sans">
                                 <a id="info" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="https://github.com/jamesisboredcoding/KTMC-SEMESTER1">Github Repo</a>
                             </li>
                             <hr class="text-zinc-500/50 my-2">
                             <li class="w-full h-8 text-md font-sans">
-                                <a id="logout" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Log Out</a>
+                                <button id="logout" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Log Out</button>
                             </li>
                         </ul>
                     </div>
@@ -69,15 +73,10 @@
         </section>
 
         <!-- Main Window -->
-        <section class="main-window grow relative h-full border-l inited border-l-zinc-700 flex justify-center">
-            <div class="messages absolute pt-10 w-full px-[17%] top-0 overflow-scroll h-11/12 pb-20">
-                <div data-role="user" class="message">
-                    <p>write in markdown</p>
-                </div>
+        <section class="main-window grow relative h-full flex justify-center"> <!--inited-->
+            <div class="messages absolute pt-10 w-full px-[17%] top-0 overflow-x-hidden overflow-y-scroll h-11/12 pb-20">
                 <div data-role="assistant" class="message">
-                    <div class="thinking text-zinc-500"></div>
                     <i class="text-zinc-400/50 mb-2 think-status hidden">Thought for 3 seconds</i>
-                    <div class="content"></div>
                 </div>
             </div>
             <div class="message-container w-2/3">
@@ -93,7 +92,7 @@
                                 <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-zinc-950 text-zinc-50 text-xs rounded-lg py-1 w-20">Thinking</span>
                             </button></li>
                             <div class="seperator grow"></div>
-                            <button id="send" class="inline-block w-8 rounded-lg aspect-square bg-blue-500 text-zinc-50 disabled:opacity-40"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button disabled id="send" class="inline-block w-8 rounded-lg aspect-square bg-blue-500 text-zinc-50"><i class="fa-solid fa-arrow-up"></i></button>
                         </ul>
                     </div>
                 </div>
