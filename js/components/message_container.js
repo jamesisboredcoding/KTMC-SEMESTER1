@@ -1,6 +1,6 @@
 import Chat from "../modules/chat.js"
 import stream from "../modules/proxy.js"
-import { db } from "../modules/shared.js"
+import { db, current_chat as current, get_model_info, set_system } from "../modules/shared.js"
 
 const mainWindow = document.querySelector(".main-window")
 const container = mainWindow.querySelector(".message-container")
@@ -43,13 +43,15 @@ function add_file(name, size, key) {
 }
 
 async function handle_message(content) {
-    if (!current_chat) {
+    if (!current_chat && !current) {
         current_chat = new Chat(null, content)
+    } else if (!current_chat && current) {
+        current_chat = current
     }
 
     mainWindow.classList.add("inited")
     current_chat.add_message_entry("user").render(content)
-    messages.scrollTo({ top: 10000, behavior: "smooth" })
+    messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" })
 
     const thinking_message = current_chat.add_message_entry("assistant")
     const message = current_chat.add_message_entry("assistant")
@@ -61,14 +63,28 @@ async function handle_message(content) {
             content = content + `\n\n${file.name} content:\n${file.content}`
             file.element.querySelector(".file-remove").click()
         }
-        content = content + "\n</Files>"
     }
     
     message.set_streaming(true)
     message.render("")
     current_chat.messages.push({ role: "user", content: content })
+
+    const message_list = set_system(current_chat.messages, db.data.settings.system)
+    const model = get_model_info(db.data.settings.model, db.data.think)
+
+    console.log(message_list)
+
+    const body = {
+        model: model.name,
+        stream: true,
+        messages: message_list
+    }
+
+    if (model && typeof(model.thinking) == "bool") {
+        body.think = model.thinking
+    }
     
-    stream(current_chat.messages, db.data.think ? "medium" : undefined, (data) => {
+    stream(body, (data) => {
         if (data.type == "thinking") {
             message.set_streaming(false)
             thinking_message.thinking = true
@@ -78,7 +94,7 @@ async function handle_message(content) {
             thinking_message.render("")
             message.render(data.content)
         }
-        messages.scrollTo({ top: 10000, behavior: "smooth" })
+        messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" })
     }, (data) => {
         message.set_streaming(false)
         current_chat.messages.push(

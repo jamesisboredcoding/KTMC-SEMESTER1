@@ -22,10 +22,6 @@
         }
         &:not(.extended) {
             @apply transition-all absolute md:relative;
-            .profile { @apply justify-center; }
-            .profile .info { @apply hidden; }
-            .profile .icon { @apply h-9; }
-            .popup { @apply hidden; }
             .buttons button { @apply text-[0px] px-0; &::before { @apply mx-2; } }
             .chats { @apply opacity-0 pointer-events-none; }
             & > h1 { @apply opacity-0; }
@@ -39,12 +35,6 @@
 
             &::before {
                 @apply font-fa font-black text-[15px] mx-2 absolute top-0 left-0;
-            }
-        }
-
-        .profile {
-            &:hover {
-                @apply bg-zinc-950/75 cursor-pointer;
             }
         }
     }
@@ -63,24 +53,8 @@
             content: "\2b";
         }
 
-        &#chats::before {
-            content: "\f086";
-        }
-
         &#settings::before {
             content: "\f013";
-        }
-
-        &#plan::before, &#upgrade::before {
-            content: "\f35b";
-        }
-
-        &#info::before {
-            content: "\f3e5";
-        }
-
-        &#logout::before {
-            content: "\f2f5";
         }
     }
 
@@ -182,12 +156,12 @@
         @apply pointer-events-none z-100 transition-all;
         &.active {
             @apply pointer-events-auto backdrop-blur-xs transition-all;
-            .modal {
-                @apply transition-all scale-100 opacity-100 pointer-events-auto;
-            }
         }
         .modal {
-            @apply bg-zinc-800 opacity-0 pointer-events-none rounded-lg border border-zinc-600 p-3 scale-90 transition-all;
+            @apply bg-zinc-800 absolute left-1/2 top-1/2 -translate-1/2 rounded-lg border border-zinc-600 p-3 scale-100 opacity-100 pointer-events-auto transition-all;
+            &.inactive {
+                @apply opacity-0 pointer-events-none scale-90 transition-all;
+            }
         }
     }
 }

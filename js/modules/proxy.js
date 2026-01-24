@@ -1,15 +1,10 @@
-function stream(messages, think = undefined, callback, finishCallback) {
+function stream(body, callback, finishCallback) {
     fetch("https://ktmcsemester-1-proxy.vercel.app/chat", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-            model: "gpt-oss:120b-cloud",
-            messages: messages,
-            stream: true,
-            think: think
-        })
+        body: JSON.stringify(body)
     }).then(async response => {
         const reader = response.body?.getReader()
         const decoder = new TextDecoder()

@@ -29,7 +29,7 @@
                     <button id="new-chat" class="sidebar-opt h-full rounded-lg block">New Chat</button>
                 </li>
                 <li class="w-full h-8 text-md font-sans flex">
-                    <button id="upgrade" class="sidebar-opt h-full rounded-lg block">Upgrade</button>
+                    <button id="settings" class="sidebar-opt h-full rounded-lg block">Settings</button>
                 </li>
             </ul>
             <hr class="text-zinc-600 my-3">
@@ -39,37 +39,6 @@
                 <a id="chat-example" class="hidden sidebar-opt h-8 w-full rounded-lg block px-2 text-sm/8 truncate" href="#">lorem50</a>
                 <p class="pholder text-zinc-400/70 text-center text-sm mt-10 relative">Your chats will show up here</p>
             </ul>
-
-            <!-- Profile Bar -->
-            <div class="profile relative w-full h-16 border-t border-t-zinc-700 p-3.5 flex flex-row items-center">
-                <h2 class="icon text-zinc-900 text-center font-serif font-medium w-9 text-xl/9 bg-zinc-300 rounded-full aspect-square">J</h2>
-                <div class="info flex-col mx-3">
-                    <p class="text-zinc-300 text-sm">Guest</p>
-                    <p class="text-zinc-400 text-xs">Free Plan</p>
-                </div>
-
-                <!-- Popup -->
-                <div class="popup hidden absolute left-0 bottom-18 w-full px-2">
-                    <div class="container bg-zinc-800 w-full h-full rounded-xl border border-zinc-500 p-2">
-                        <p class="text-zinc-500 text-sm px-1">example@gmail.com</p>
-                        <ul class="buttons mt-3">
-                            <li class="w-full h-8 text-md font-sans">
-                                <button id="settings" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Settings</button>
-                            </li>
-                            <li class="w-full h-8 text-md font-sans">
-                                <button id="plan" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Upgrade Plan</button>
-                            </li>
-                            <li class="w-full h-8 text-md font-sans">
-                                <a id="info" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="https://github.com/jamesisboredcoding/KTMC-SEMESTER1">Github Repo</a>
-                            </li>
-                            <hr class="text-zinc-500/50 my-2">
-                            <li class="w-full h-8 text-md font-sans">
-                                <button id="logout" class="sidebar-opt h-full w-full rounded-lg block text-sm/8" href="#">Log Out</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </section>
 
         <!-- Main Window -->
@@ -102,7 +71,7 @@
                             <li><button id="attach" class="inline-block w-8 text-zinc-500 rounded-lg aspect-square"><i class="fa-solid fa-plus"></i>
                                 <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-zinc-950 text-zinc-50 text-xs rounded-lg py-1 w-20">Attach files</span>
                             </button></li>
-                            <li><button id="think" class="can-select inline-block w-8 rounded-lg aspect-square selected"><i class="fa-solid fa-repeat"></i>
+                            <li><button id="think" class="can-select inline-block w-8 rounded-lg aspect-square"><i class="fa-solid fa-repeat"></i>
                                 <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-zinc-950 text-zinc-50 text-xs rounded-lg py-1 w-20">Thinking</span>
                             </button></li>
                             <div class="seperator grow"></div>
@@ -114,17 +83,31 @@
         </section>
 
         <!-- Global -->
-        <div class="absolute-container flex justify-center items-center absolute h-screen w-screen top-0 left-0">
-            <div id="rename" class="modal w-100 hidden">
+        <div class="absolute-container absolute h-screen w-screen top-0 left-0">
+            <div id="rename" class="modal w-100 inactive">
                 <label class="truncate text-sm text-zinc-400">Rename 'Untititled' chat</label><br>
                 <input type="text" maxlength="45" placeholder="New chat name here..." class="focus:outline-0 my-2 placeholder:text-zinc-400 text-zinc-50 w-full">
                 <button id="confirm" class="button rounded-lg px-3 py-1"><i class=" text-xs pr-5 fa-solid fa-pen"></i>Rename</button>
                 <button id="cancel" class="button rounded-lg px-3 py-1"><i class=" text-xs pr-5 fa-solid fa-xmark"></i>Cancel</button>
             </div>
-            <div id="confirm-delete" class="modal w-100 hidden">
+            <div id="confirm-delete" class="modal w-100 inactive">
                 <p class="text-sm text-zinc-400 mb-2">Are you sure you want to delete 'Untitled'? This action is <span class="text-red-500">irreversible</span> and cannot be undone.</p>
-                <button id="confirm" class="button rounded-lg px-3 py-1"><i class=" text-xs pr-5 fa-solid fa-trash"></i>Delete</button>
-                <button id="cancel" class="button rounded-lg px-3 py-1"><i class=" text-xs pr-5 fa-solid fa-xmark"></i>Cancel</button>
+                <button id="confirm" class="button rounded-lg px-3 py-1"><i class="text-xs pr-5 fa-solid fa-trash"></i>Delete</button>
+                <button id="cancel" class="button rounded-lg px-3 py-1"><i class="text-xs pr-5 fa-solid fa-xmark"></i>Cancel</button>
+            </div>
+            <div id="settings" class="modal w-100 inactive">
+                <label class="text-sm text-zinc-400">AI Model:</label><br>
+                <select class="bg-zinc-800 border border-zinc-500 hover:bg-zinc-700 my-2 rounded-lg px-2 py-1 text-zinc-50">
+                    <option value="kimi">Kimi-K2</option>
+                    <option value="gpt">GPT-OSS</option>
+                    <option value="qwen">Qwen3</option>
+                </select><br>
+                <hr class="text-zinc-700">
+                <label class="text-sm text-zinc-400">Custom Instructions:</label><br>
+                <textarea maxlength="200" type="text" rows="5" placeholder="You are a professional finance advisor..." class="focus:outline-0 resize-none my-2 placeholder:text-zinc-400 text-zinc-50 w-full"></textarea>
+                <hr class="text-zinc-700 mb-2">
+                <button id="confirm" class="button rounded-lg px-3 py-1"><i class="fa-solid pr-5 fa-floppy-disk"></i>Save</button>
+                <button id="cancel" class="button rounded-lg px-3 py-1"><i class="text-xs pr-5 fa-solid fa-xmark"></i>Cancel</button>
             </div>
         </div>
 

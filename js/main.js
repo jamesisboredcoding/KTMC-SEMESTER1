@@ -1,5 +1,6 @@
 import "./components/message_container.js"
 import "./components/chat_container.js"
+import "./components/sidebar.js"
 
 import Chat from "./modules/chat.js"
 import { db, set_chat } from "./modules/shared.js"
@@ -8,6 +9,7 @@ const url = new URL(window.location.href)
 const params = Object.fromEntries(url.searchParams)
 
 const mainWindow = document.querySelector(".main-window")
+const messages = mainWindow.querySelector(".messages")
 
 let chats = {}
 for (const chat_id in db.data.chats) {
@@ -29,12 +31,5 @@ if (existing_chat && chat_data && chat_data.messages) {
     })
 }
 
+messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" })
 set_chat(existing_chat)
-
-document.querySelector(".sidebar").classList.toggle("extended", db.data.extended)
-document.querySelector(".sidebar-button").addEventListener("click", () => {
-    let data = db.data
-    data.extended = !document.querySelector(".sidebar").classList.contains("extended")
-    db.update(data)
-    document.querySelector(".sidebar").classList.toggle("extended", data.extended)
-})
