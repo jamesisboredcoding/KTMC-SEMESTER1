@@ -2,7 +2,12 @@ import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js"
 import { db } from "./shared.js"
 
 const mainWindow = document.querySelector(".main-window")
+const sidebar = document.querySelector(".sidebar")
+
 const messages = mainWindow.querySelector(".messages")
+const chats = sidebar.querySelector(".chats")
+
+const placeholder = chats.querySelector(".pholder")
 
 class Message {
     constructor(role) {
@@ -41,11 +46,18 @@ class Message {
 
         if (this.role == "assistant") {
             if (this.thinking) {
-                this.thinking_container.innerHTML = marked.parse(content)
+                // this.thinking_container.innerHTML = marked.parse(content)
+                this.thinking_container.innerHTML = content
             } else {
                 this.content_container.innerHTML = marked.parse(content)
             }
         } else {
+            const files_start = content.indexOf("<Files>")
+            const files_end = content.indexOf("</Files>")
+
+            if (files_start != -1) {
+                content = content.substring(0, files_start)
+            }
             this.content_par.textContent = content
         }
     }
@@ -58,13 +70,34 @@ class Message {
 }
 
 class Chat {
-    constructor(id) {
+    constructor(id, chatName) {
         this.messages = []
         this.objects = []
+        this._name = chatName ?? "Untitled"
 
         this.id = id ?? (new Date().getTime())
-        mainWindow.classList.add("inited")
-        console.log(`Created chat with ID: ${this.id}`)
+        placeholder.classList.add("hidden")
+
+        this.chat_element = chats.querySelector("#chat-example").cloneNode(true)
+        this.chat_element.removeAttribute("id")
+        this.chat_element.classList.remove("hidden")
+        this.chat_element.textContent = this._name
+        this.chat_element.setAttribute("href", "?chat=" + this.id)
+
+        chats.appendChild(this.chat_element)
+    }
+
+    get name() {
+        return this._name
+    }
+
+    set name(value) {
+        this._name = value
+        this.chat_element.textContent = this._name
+
+        let data = db.data
+        data.chats[this.id].name = value
+        db.update(data)
     }
 
     save() {
@@ -79,9 +112,16 @@ class Chat {
             })
         })
 
-        data.chats[this.id] = normalized_messages
-        console.log(normalized_messages, data)
+        data.chats[this.id] = { messages: normalized_messages, name: this.name }
         db.update(data)
+    }
+
+    delete() {
+        let data = db.data
+        delete data.chats[this.id]
+
+        db.update(data)
+        delete this
     }
 
     add_message_entry(role) {

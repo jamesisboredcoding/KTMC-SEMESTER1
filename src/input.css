@@ -106,6 +106,13 @@
             .messages {
                 @apply block;
             }
+            .controller {
+                @apply flex;
+            }
+        }
+
+        .controller {
+            @apply hidden;
         }
 
         .messages {
@@ -168,6 +175,28 @@
             &:disabled, &.disabled {
                 @apply cursor-default opacity-40;
             }
+        }
+    }
+
+    .absolute-container {
+        @apply pointer-events-none z-100 transition-all;
+        &.active {
+            @apply pointer-events-auto backdrop-blur-xs transition-all;
+            .modal {
+                @apply transition-all scale-100 opacity-100 pointer-events-auto;
+            }
+        }
+        .modal {
+            @apply bg-zinc-800 opacity-0 pointer-events-none rounded-lg border border-zinc-600 p-3 scale-90 transition-all;
+        }
+    }
+}
+
+@layer utilities {
+    .button {
+        @apply text-zinc-400 transition-colors;
+        &:hover {
+            @apply bg-zinc-950/50 text-zinc-50 cursor-pointer transition-colors;
         }
     }
 }

@@ -1,4 +1,4 @@
-function stream(messages, think = false, callback, finishCallback) {
+function stream(messages, think = undefined, callback, finishCallback) {
     fetch("https://ktmcsemester-1-proxy.vercel.app/chat", {
         method: "POST",
         headers: {

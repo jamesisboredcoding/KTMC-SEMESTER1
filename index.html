@@ -14,7 +14,7 @@
 <body>
     <main class="flex h-screen">
         <!-- Sidebar -->
-        <section class="sidebar bg-zinc-900 extended h-full pt-2 flex flex-col select-none z-10 border-r border-r-zinc-700">
+        <section class="sidebar bg-zinc-900 md:extended h-screen pt-2 flex flex-col select-none z-10 border-r border-b border-b-zinc-700 border-r-zinc-700">
             <!-- Topbar -->
             <h1 class="text-zinc-50 font-serif text-2xl font-medium mb-4 px-4">ChatAI</h1>
             <div class="w-full relative">
@@ -26,18 +26,18 @@
             <!-- Buttons -->
             <ul class="buttons px-2">
                 <li class="w-full h-8 text-md font-sans">
-                    <button id="new-chat" class="sidebar-opt h-full rounded-lg block" href="#">New Chat</button>
+                    <button id="new-chat" class="sidebar-opt h-full rounded-lg block">New Chat</button>
                 </li>
                 <li class="w-full h-8 text-md font-sans flex">
-                    <button id="upgrade" class="sidebar-opt h-full rounded-lg block" href="#">Upgrade</button>
+                    <button id="upgrade" class="sidebar-opt h-full rounded-lg block">Upgrade</button>
                 </li>
             </ul>
             <hr class="text-zinc-600 my-3">
 
             <!-- Chats -->
             <ul class="chats w-full grow px-2 overflow-scroll">
-                <a id="..." class="sidebar-opt h-8 w-full rounded-lg block px-2 text-sm/8 truncate" href="#">Presentation about lemons</a>
-                <p class="pholder text-zinc-400/70 text-center text-sm mt-10">Your chats will show up here</p>
+                <a id="chat-example" class="hidden sidebar-opt h-8 w-full rounded-lg block px-2 text-sm/8 truncate" href="#">lorem50</a>
+                <p class="pholder text-zinc-400/70 text-center text-sm mt-10 relative">Your chats will show up here</p>
             </ul>
 
             <!-- Profile Bar -->
@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Popup -->
-                <div class="popup absolute left-0 bottom-18 w-full px-2">
+                <div class="popup hidden absolute left-0 bottom-18 w-full px-2">
                     <div class="container bg-zinc-800 w-full h-full rounded-xl border border-zinc-500 p-2">
                         <p class="text-zinc-500 text-sm px-1">example@gmail.com</p>
                         <ul class="buttons mt-3">
@@ -73,15 +73,29 @@
         </section>
 
         <!-- Main Window -->
-        <section class="main-window grow relative h-full flex justify-center"> <!--inited-->
-            <div class="messages absolute pt-10 w-full px-[17%] top-0 overflow-x-hidden overflow-y-scroll h-11/12 pb-20">
+        <section class="main-window grow relative h-screen flex justify-center"> <!--inited-->
+            <div class="controller px-1 flex-row justify-end items-center bg-zinc-900 border-b border-b-zinc-600 h-10 z-2 w-full fixed top-0 left-0">
+                <button id="rename" class="h-8 button text-xs px-3 rounded-lg flex justify-center items-center"><i class="fa-solid pr-3 fa-pen text-xs"></i>Rename Chat</button>
+                <button id="delete" class="h-8 button text-xs px-3 rounded-lg flex justify-center items-center"><i class="fa-solid pr-3 fa-trash text-xs"></i>Delete Chat</button>
+            </div>
+            <div class="messages absolute pt-10 w-full px-[9%] md:px-[17%] top-0 overflow-x-hidden overflow-y-scroll h-11/12 pb-20">
                 <div data-role="assistant" class="message">
                     <i class="text-zinc-400/50 mb-2 think-status hidden">Thought for 3 seconds</i>
                 </div>
             </div>
-            <div class="message-container w-2/3">
+            <div class="message-container w-5/6 md:w-2/3 transition-transform">
                 <h1 class="text-zinc-50 text-center text-3xl select-none greeting font-serif">How can I help you today?</h1>
                 <div class="message-box w-full bg-zinc-800 rounded-3xl px-4 py-2 mt-10">
+                    <div class="files flex flex-row gap-1 w-full overflow-hidden">
+                        <div id="file-template" class="file hidden bg-zinc-700 flex items-center rounded-lg border border-zinc-600 h-12 w-30 hover:w-auto relative text-zinc-50">
+                            <i class="fa-regular fa-file text-xl pl-3"></i>
+                            <div class="info truncate">
+                                <p class="file-name px-3 select-none truncate">filelarge.txt</p>
+                                <p class="file-size px-3 text-xs pb-1 select-none truncate">1.24 KB</p>
+                            </div>
+                            <button class="file-remove absolute hover:cursor-pointer top-1 right-1 text-sm hover:text-red-600"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
                     <textarea class="text-zinc-50 resize-none py-3 h-3 min-h-6 max-h-50 px-1 w-full" style="height: 1.5rem;" placeholder="Ask anything"></textarea>
                     <div class="buttons w-full mt-2 h-10 bg-amber-300/0">
                         <ul class="flex flex-row gap-1">
@@ -98,6 +112,24 @@
                 </div>
             </div>
         </section>
+
+        <!-- Global -->
+        <div class="absolute-container flex justify-center items-center absolute h-screen w-screen top-0 left-0">
+            <div id="rename" class="modal w-100 hidden">
+                <label class="truncate text-sm text-zinc-400">Rename 'Untititled' chat</label><br>
+                <input type="text" maxlength="45" placeholder="New chat name here..." class="focus:outline-0 my-2 placeholder:text-zinc-400 text-zinc-50 w-full">
+                <button id="confirm" class="button rounded-lg px-3 py-1"><i class=" text-xs pr-5 fa-solid fa-pen"></i>Rename</button>
+                <button id="cancel" class="button rounded-lg px-3 py-1"><i class=" text-xs pr-5 fa-solid fa-xmark"></i>Cancel</button>
+            </div>
+            <div id="confirm-delete" class="modal w-100 hidden">
+                <p class="text-sm text-zinc-400 mb-2">Are you sure you want to delete 'Untitled'? This action is <span class="text-red-500">irreversible</span> and cannot be undone.</p>
+                <button id="confirm" class="button rounded-lg px-3 py-1"><i class=" text-xs pr-5 fa-solid fa-trash"></i>Delete</button>
+                <button id="cancel" class="button rounded-lg px-3 py-1"><i class=" text-xs pr-5 fa-solid fa-xmark"></i>Cancel</button>
+            </div>
+        </div>
+
+        <!-- Meta elements -->
+        <input type="file" accept=".txt, .csv, .js, .json, .html, .css, .md, .xml, .log, .yml, .yaml" class="hidden" id="file-attach">
     </main>
 
     <!-- Quick JS -->

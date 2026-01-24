@@ -1,30 +1,74 @@
 import Chat from "../modules/chat.js"
 import stream from "../modules/proxy.js"
+import { db } from "../modules/shared.js"
 
 const mainWindow = document.querySelector(".main-window")
 const container = mainWindow.querySelector(".message-container")
 const messages = mainWindow.querySelector(".messages")
 
 const send_message = container.querySelector("#send")
+const think_button = container.querySelector("#think")
+const attach_files = container.querySelector("#attach")
 const message_area = container.querySelector("textarea")
+const files = container.querySelector(".files")
+
+const file_attach = document.querySelector("#file-attach")
 
 let current_chat = null
+let attached_files = {}
+
+function bytes_to_str(bytes) {
+    const sizes = ["B", "KB", "MB", "GB"]
+    const index = Math.floor(Math.log(bytes) / Math.log(1024))
+
+    return parseFloat( (bytes / Math.pow(1024, index)).toFixed(2) ) + " " + sizes[index]
+}
+
+function add_file(name, size, key) {
+    const file = container.querySelector("#file-template").cloneNode(true)
+    file.removeAttribute("id")
+    file.classList.remove("hidden")
+
+    file.querySelector(".file-name").textContent = name
+    file.querySelector(".file-size").textContent = bytes_to_str(size)
+
+    file.querySelector(".file-remove").addEventListener("click", () => {
+        delete attached_files[key]
+        file.remove()
+    })
+
+    console.log("Added " + name + " file")
+    files.appendChild(file)
+    return file
+}
 
 async function handle_message(content) {
     if (!current_chat) {
-        current_chat = new Chat()
+        current_chat = new Chat(null, content)
     }
 
+    mainWindow.classList.add("inited")
     current_chat.add_message_entry("user").render(content)
     messages.scrollTo({ top: 10000, behavior: "smooth" })
 
     const thinking_message = current_chat.add_message_entry("assistant")
     const message = current_chat.add_message_entry("assistant")
+
+    if (Object.keys(attached_files).length > 0) {
+        content = content + "\n<Files>"
+        for (const key in attached_files) {
+            const file = attached_files[key]
+            content = content + `\n\n${file.name} content:\n${file.content}`
+            file.element.querySelector(".file-remove").click()
+        }
+        content = content + "\n</Files>"
+    }
     
     message.set_streaming(true)
+    message.render("")
     current_chat.messages.push({ role: "user", content: content })
     
-    stream(current_chat.messages, "medium", (data) => {
+    stream(current_chat.messages, db.data.think ? "medium" : undefined, (data) => {
         if (data.type == "thinking") {
             message.set_streaming(false)
             thinking_message.thinking = true
@@ -68,4 +112,39 @@ send_message.addEventListener("click", () => {
     send_message.disabled = "true"
     handle_message(message_area.value)
     message_area.value = ""
+})
+
+think_button.addEventListener("click", () => {
+    think_button.classList.toggle("selected")
+
+    const data = db.data
+    data.think = think_button.classList.contains("selected")
+    db.update(data)
+})
+
+attach_files.addEventListener("click", () => {
+    file_attach.click()
+})
+
+file_attach.addEventListener("change", (e) => {
+    Array.from(e.target.files).forEach(file => {
+        if (file.size > 1048576) {
+            return alert(`File size of ${file.name} too big, maximum 1MB`)
+        }
+
+        const key = new Date().getTime()
+        const fileReader = new FileReader()
+
+        fileReader.readAsText(file)
+        fileReader.onloadend = () => {
+            const element = add_file(file.name, file.size, key)
+            attached_files[key] = {
+                name: file.name,
+                size: file.size,
+                content: fileReader.result,
+                element: element
+            }
+        }
+    })
+    e.target.value = ""
 })
