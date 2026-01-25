@@ -22,7 +22,7 @@
         }
         &:not(.extended) {
             @apply transition-all absolute md:relative;
-            .buttons button { @apply text-[0px] px-0; &::before { @apply mx-2; } }
+            .buttons button, .buttons a { @apply text-[0px] px-0; &::before { @apply mx-2; } }
             .chats { @apply opacity-0 pointer-events-none; }
             & > h1 { @apply opacity-0; }
         }
@@ -55,6 +55,10 @@
 
         &#settings::before {
             content: "\f013";
+        }
+
+        &#git::before {
+            content: "\f126";
         }
     }
 

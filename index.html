@@ -29,6 +29,9 @@
                     <button id="new-chat" class="sidebar-opt h-full rounded-lg block">New Chat</button>
                 </li>
                 <li class="w-full h-8 text-md font-sans flex">
+                    <a id="git" class="sidebar-opt h-full rounded-lg block" href="https://github.com/jamesisboredcoding/KTMC-SEMESTER1">Github Repo</a>
+                </li>
+                <li class="w-full h-8 text-md font-sans flex">
                     <button id="settings" class="sidebar-opt h-full rounded-lg block">Settings</button>
                 </li>
             </ul>
@@ -36,6 +39,7 @@
 
             <!-- Chats -->
             <ul class="chats w-full grow px-2 overflow-scroll">
+                <p class="text-zinc-500 text-sm px-2 mb-2">Chats</p>
                 <a id="chat-example" class="hidden sidebar-opt h-8 w-full rounded-lg block px-2 text-sm/8 truncate" href="#">lorem50</a>
                 <p class="pholder text-zinc-400/70 text-center text-sm mt-10 relative">Your chats will show up here</p>
             </ul>
@@ -104,7 +108,7 @@
                 </select><br>
                 <hr class="text-zinc-700">
                 <label class="text-sm text-zinc-400">Custom Instructions:</label><br>
-                <textarea maxlength="200" type="text" rows="5" placeholder="You are a professional finance advisor..." class="focus:outline-0 resize-none my-2 placeholder:text-zinc-400 text-zinc-50 w-full"></textarea>
+                <textarea maxlength="200" type="text" rows="5" placeholder="You are a professional finance advisor..." class="focus:outline-0 resize-none my-2 border border-zinc-600 rounded-lg px-3 py-2 placeholder:text-zinc-400 text-zinc-50 w-full"></textarea>
                 <hr class="text-zinc-700 mb-2">
                 <button id="confirm" class="button rounded-lg px-3 py-1"><i class="fa-solid pr-5 fa-floppy-disk"></i>Save</button>
                 <button id="cancel" class="button rounded-lg px-3 py-1"><i class="text-xs pr-5 fa-solid fa-xmark"></i>Cancel</button>

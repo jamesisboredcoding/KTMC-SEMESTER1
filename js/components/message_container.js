@@ -1,6 +1,6 @@
 import Chat from "../modules/chat.js"
 import stream from "../modules/proxy.js"
-import { db, current_chat as current, get_model_info, set_system } from "../modules/shared.js"
+import { db, current_chat as current, get_model_info, set_system, set_chat } from "../modules/shared.js"
 
 const mainWindow = document.querySelector(".main-window")
 const container = mainWindow.querySelector(".message-container")
@@ -45,6 +45,7 @@ function add_file(name, size, key) {
 async function handle_message(content) {
     if (!current_chat && !current) {
         current_chat = new Chat(null, content)
+        set_chat(current_chat)
     } else if (!current_chat && current) {
         current_chat = current
     }
