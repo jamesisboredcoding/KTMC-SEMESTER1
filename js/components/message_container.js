@@ -72,8 +72,6 @@ async function handle_message(content) {
     const message_list = set_system(current_chat.messages, db.data.settings.system)
     const model = get_model_info(db.data.settings.model, db.data.think)
 
-    console.log(message_list)
-
     const body = {
         model: model.name,
         stream: true,

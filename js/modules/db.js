@@ -1,6 +1,7 @@
 class Database {
     constructor(defaultData) {
         this.data = this.fetch() ?? defaultData
+        this.update(this.data)
     }
 
     fetch() {
