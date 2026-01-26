@@ -15,9 +15,9 @@ const instructions = settingsModal.querySelector("textarea")
 const save = settingsModal.querySelector("#confirm")
 const cancel = settingsModal.querySelector("#cancel")
 
-newChat.addEventListener("click", () => {
-    window.location.href = window.location.origin
-})
+// newChat.addEventListener("click", () => {
+//     window.location.href = window.location.origin
+// })
 
 settings.addEventListener("click", () => {
     instructions.value = db.data.settings.system
