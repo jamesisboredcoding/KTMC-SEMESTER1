@@ -1,1 +1,1 @@
-# [site here](https://jamesisboredcoding.github.io/KTMC-SEMESTER1/)
+# [site here](https://ktmc-semester-1.vercel.app/)
